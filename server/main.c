@@ -7,7 +7,7 @@ int                   main()
     if ((server = create_server(12345)) == NULL)
     {
         printf("server error\n");
-        return;
+        return 1;
     }
 
     if ((bind(server->sockfd, (struct sockaddr *) &(server->serv_addr), sizeof(server->serv_addr))) < 0)  // on bind notre socket au port et a l'interface, et on verifie bien le retour
@@ -31,7 +31,7 @@ int                   main()
             if (FD_ISSET(i, &(server->fds)) && i == server->sockfd)  // on verifie si l'index courant a bien recu une modification et si il s'agit bien du FD de notre socket
             {
                 t_client *client;
-                if ((client = malloc(sizeof(t_client)) == NULL)
+                if ((client = malloc(sizeof(t_client))) == NULL)
                 {
                     printf("client error\n");
                     return 1;
