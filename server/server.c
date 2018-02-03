@@ -2,8 +2,8 @@
 
 t_server *create_server(uint port)
 {
-    t_server *server = malloc(sizeof(t_server));
-    if (server == NULL)
+    t_server *server;
+    if ((server = malloc(sizeof(t_server))) == NULL)
     {
         return NULL;
     }
