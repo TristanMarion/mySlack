@@ -30,8 +30,8 @@ int                   main()
         {
             if (FD_ISSET(i, &(server->fds)) && i == server->sockfd)  // on verifie si l'index courant a bien recu une modification et si il s'agit bien du FD de notre socket
             {
-                t_client *client = malloc(sizeof(t_client));
-                if (client == NULL)
+                t_client *client;
+                if ((client = malloc(sizeof(t_client)) == NULL)
                 {
                     printf("client error\n");
                     return 1;
