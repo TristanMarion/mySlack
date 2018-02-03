@@ -3,10 +3,11 @@
 
 int                   main()
 {   
-    t_server *server = create_server(12345);
-    if (server == NULL)
+    t_server *server;;
+    if ((server = create_server(12345)) == NULL)
     {
         printf("server error\n");
+        return;
     }
 
     if ((bind(server->sockfd, (struct sockaddr *) &(server->serv_addr), sizeof(server->serv_addr))) < 0)  // on bind notre socket au port et a l'interface, et on verifie bien le retour
