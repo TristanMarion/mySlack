@@ -4,6 +4,10 @@
 int                   main()
 {   
     t_server *server = create_server(12345);
+    if (server == NULL)
+    {
+        printf("server error\n");
+    }
 
     if ((bind(server->sockfd, (struct sockaddr *) &(server->serv_addr), sizeof(server->serv_addr))) < 0)  // on bind notre socket au port et a l'interface, et on verifie bien le retour
         perror("bind()");
@@ -26,6 +30,11 @@ int                   main()
             if (FD_ISSET(i, &(server->fds)) && i == server->sockfd)  // on verifie si l'index courant a bien recu une modification et si il s'agit bien du FD de notre socket
             {
                 t_client *client = malloc(sizeof(t_client));
+                if (client == NULL)
+                {
+                    printf("client error\n");
+                    return 1;
+                }
                 client->clilen = sizeof(client->cli_addr);
                 client->fd_id = accept(server->sockfd, (struct sockaddr *) &(client->cli_addr), &(client->clilen));  // on accept la nouvelle connexion, tmp contiendra le FD du nouveau client
                 if (client->fd_id < 0)  // on check les erreurs

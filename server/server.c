@@ -3,6 +3,10 @@
 t_server *create_server(uint port)
 {
     t_server *server = malloc(sizeof(t_server));
+    if (server == NULL)
+    {
+        return NULL;
+    }
     server->sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (server->sockfd == -1)
     {
