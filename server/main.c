@@ -3,7 +3,7 @@
 
 int                   main()
 {   
-    t_server *server;;
+    t_server *server;
     if ((server = create_server(12345)) == NULL)
     {
         printf("server error\n");
