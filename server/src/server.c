@@ -17,7 +17,7 @@ t_server *create_server(uint port)
     server->serv_addr.sin_port = htons(port);
     server->serv_addr.sin_family = AF_INET;
     server->serv_addr.sin_addr.s_addr = inet_addr("0.0.0.0");
-    server->clients = new_clients_list();
+    server->clients_list = new_clients_list();
     return server;
 }
 
@@ -43,10 +43,41 @@ int new_client(t_server *server)
         my_putstr("cannot accept\n");
     else
     {
-        welcome_message(client);
+        add_client_to_list(server, client);
+        display_clients(server);
     }
 
     return 0;
+}
+
+void add_client_to_list(t_server *server, t_client *client)
+{
+    welcome_message(client);
+    client->prev = NULL;
+    client->next = NULL;
+    if (server->clients_list->last_client == NULL)
+    {
+        server->clients_list->first_client = client;
+    }
+    else
+    {
+        client->prev = server->clients_list->last_client;
+        server->clients_list->last_client->next = client;
+    }
+    server->clients_list->last_client = client;
+    server->clients_list->nb_clients++;
+}
+
+void display_clients(t_server *server)
+{
+    t_client *tmp;
+    printf("%d\n", server->clients_list->nb_clients);
+    tmp = server->clients_list->first_client;
+    while (tmp != NULL)
+    {
+        printf("%d\n", tmp->fd_id);
+        tmp = tmp->next;
+    }
 }
 
 void welcome_message(t_client *client)
