@@ -33,15 +33,15 @@ int new_client(t_server *server)
     t_client *client;
     if ((client = malloc(sizeof(t_client))) == NULL)
     {
-        printf("client error\n");
+        my_putstr("client error\n");
         return 1;
     }
     client->clilen = sizeof(client->cli_addr);
     client->fd_id = accept(server->sockfd, (struct sockaddr *)&(client->cli_addr), &(client->clilen)); // on accept la nouvelle connexion, tmp contiendra le FD du nouveau client
     if (client->fd_id < 0)                                                                             // on check les erreurs
-        printf("cannot accept\n");
+        my_putstr("cannot accept\n");
     else
-        printf("accepted new client with FD %d\n", client->fd_id); // on indique qu'on a un nouveau client
+        my_putstr("accepted new client with FD %d\n", client->fd_id); // on indique qu'on a un nouveau client
 
     return 0;
 }

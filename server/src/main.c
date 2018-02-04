@@ -6,7 +6,7 @@ int main()
     t_server *server;
     if ((server = create_server(12345)) == NULL)
     {
-        printf("server error\n");
+        my_putstr("server error\n");
         return 1;
     }
 
