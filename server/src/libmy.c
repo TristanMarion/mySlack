@@ -36,3 +36,21 @@ void my_put_nbr(int n)
     else
         my_putchar(n + 48);
 }
+
+char *my_strdup(const char *str)
+{
+    int i;
+    char *copy;
+
+    i = 0;
+    copy = NULL;
+    if ((copy = malloc((my_strlen(str) + 1) * sizeof(char))) == NULL)
+        return (NULL);
+    while (str[i] != '\0')
+    {
+        copy[i] = str[i];
+        i++;
+    }
+    copy[i] = '\0';
+    return (copy);
+}
