@@ -12,7 +12,7 @@ CC		= gcc
 NAME		= server
 BUILD_PATH	= obj
 SRC		= src/server.c src/main.c
-INCLUDES	= -I ../includes
+INCLUDES	= -I src/includes
 CFLAGS		= -W -Wextra -Werror -Wall -pedantic $(INCLUDES)
 OBJ		= $(SRC:%.c=$(BUILD_PATH)/%.o)
 
