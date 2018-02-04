@@ -19,5 +19,7 @@ typedef struct s_server
 } t_server;
 
 t_server *create_server(uint);
+void init_server(t_server *server);
+int new_client(t_server *server);
 
 #endif
