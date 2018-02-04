@@ -11,7 +11,7 @@
 CC		= gcc
 NAME		= server
 BUILD_PATH	= obj
-SRC		= src/server.c src/main.c src/clients_list.c src/libmy.c
+SRC		= src/server.c src/main.c src/clients_list.c src/libmy.c src/color.c src/display.c
 INCLUDES	= -I src/includes
 CFLAGS		= -W -Wextra -Werror -Wall -pedantic $(INCLUDES)
 OBJ		= $(SRC:%.c=$(BUILD_PATH)/%.o)
