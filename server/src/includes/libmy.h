@@ -1,0 +1,8 @@
+#ifndef __LIBMY_H__
+#define __LIBMY_H__
+
+void my_putchar(const char c);
+int my_strlen(const char *str);
+void my_putstr(const char *str);
+
+#endif
