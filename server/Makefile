@@ -8,29 +8,29 @@
 ## Last update Sun Feb  6 11:10:41 2018 MARION Tristan
 ##
 
-CC = gcc
-NAME = server
-BUILD_PATH = obj
-SRC = server.c main.c
-INCLUDES = -I ../includes
-CFLAGS = -W -Wextra -Werror -Wall -pedantic $(INCLUDES)
-OBJ = $(SRC:%.c=$(BUILD_PATH)/%.o)
+CC		= gcc
+NAME		= server
+BUILD_PATH	= obj
+SRC		= src/server.c src/main.c
+INCLUDES	= -I ../includes
+CFLAGS		= -W -Wextra -Werror -Wall -pedantic $(INCLUDES)
+OBJ		= $(SRC:%.c=$(BUILD_PATH)/%.o)
 
-MKDIR = mkdir
+MKDIR	= mkdir
 RM	= rm -f
-RMDIR = rm -rf
+RMDIR	= rm -rf
 
 .PHONY	: all dirs clean fclean re
 
-all		: $(NAME)
+all	: $(NAME)
 
-$(NAME) : dirs $(OBJ)
+$(NAME)	: dirs $(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) -o $(NAME)
 
 dirs	:
 	$(MKDIR) -p $(dir $(OBJ))
 
-$(BUILD_PATH)/%.o :	%.c
+$(BUILD_PATH)/%.o : %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean	:
@@ -40,4 +40,4 @@ clean	:
 fclean	: clean
 	$(RM) $(NAME)
 
-re: fclean all
+re	: fclean all
