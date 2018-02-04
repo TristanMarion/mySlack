@@ -78,6 +78,7 @@ void display_clients(t_server *server)
         printf("%d\n", tmp->fd_id);
         tmp = tmp->next;
     }
+}
 
 void welcome_message(t_client *client)
 {
