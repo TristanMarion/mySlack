@@ -1,5 +1,4 @@
-#include "server.h"
-#include "libmy.h"
+#include "includes.h"
 
 t_server *create_server(uint port)
 {
@@ -11,7 +10,7 @@ t_server *create_server(uint port)
     server->sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (server->sockfd == -1)
     {
-        perror("socket()");
+        put_error("socket()");
         return NULL;
     }
     server->serv_addr.sin_port = htons(port);
@@ -34,17 +33,17 @@ int new_client(t_server *server)
     t_client *client;
     if ((client = malloc(sizeof(t_client))) == NULL)
     {
-        my_putstr("client error\n");
+        put_error("client error\n");
         return 1;
     }
     client->clilen = sizeof(client->cli_addr);
     client->fd_id = accept(server->sockfd, (struct sockaddr *)&(client->cli_addr), &(client->clilen)); // on accept la nouvelle connexion, tmp contiendra le FD du nouveau client
     if (client->fd_id < 0)                                                                             // on check les erreurs
-        my_putstr("cannot accept\n");
+        put_error("cannot accept\n");
     else
     {
-        add_client_to_list(server, client);
         display_clients(server);
+        add_client_to_list(server, client);
     }
 
     return 0;
@@ -71,11 +70,18 @@ void add_client_to_list(t_server *server, t_client *client)
 void display_clients(t_server *server)
 {
     t_client *tmp;
-    printf("%d\n", server->clients_list->nb_clients);
+    char *message;
+
+    message = my_strdup("A new user joined the server !\n");
+    my_putstr_color("blue", "\nNumber of connected users : ");
+    my_put_nbr(server->clients_list->nb_clients + 1);
+    my_putstr_color("cyan", "\n\nList of connected users :");
     tmp = server->clients_list->first_client;
     while (tmp != NULL)
     {
-        printf("%d\n", tmp->fd_id);
+        my_putstr("\n\t - ");
+        my_put_nbr(tmp->fd_id);
+        send(tmp->fd_id, message, my_strlen(message), 0);    
         tmp = tmp->next;
     }
 }
@@ -83,7 +89,7 @@ void display_clients(t_server *server)
 void welcome_message(t_client *client)
 {
     char *message = my_strdup("Welcome to the Tacos Team Server !\r\n");
-    my_putstr("accepted new client with FD "); // TODO : Add client FD
+    my_putstr_color("magenta", "\n\nAccepted new client with FD "); // TODO : Add client FD
     my_put_nbr(client->fd_id);
     my_putstr("\n");
     send(client->fd_id, message, my_strlen(message), 0);
