@@ -16,6 +16,7 @@ t_server *create_server(uint port)
     server->serv_addr.sin_port = htons(port);
     server->serv_addr.sin_family = AF_INET;
     server->serv_addr.sin_addr.s_addr = inet_addr("0.0.0.0");
+    server->clients = new_clients_list();
     return server;
 }
 
