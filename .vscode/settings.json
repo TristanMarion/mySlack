@@ -6,6 +6,7 @@
         "clients_list.h": "c",
         "color.h": "c",
         "in.h": "c",
-        "socket.h": "c"
+        "socket.h": "c",
+        "stdlib.h": "c"
     }
 }

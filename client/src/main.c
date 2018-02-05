@@ -1,10 +1,11 @@
 #include "includes_client.h"
 #include <string.h>
- 
-int main(int argc, char** argv)
+
+int main(int argc, char **argv)
 {
     char server_reply[2000];
-    if (argc != 3) {
+    if (argc != 3)
+    {
         put_info("Usage : ./client serv_addr port\n");
         return (1);
     }
@@ -12,9 +13,9 @@ int main(int argc, char** argv)
     int sock;
     struct sockaddr_in server;
     //char message[1000] , server_reply[2000];
-     
+
     //Create socket
-    sock = socket(AF_INET , SOCK_STREAM , 0);
+    sock = socket(AF_INET, SOCK_STREAM, 0);
     if (sock == -1)
     {
         put_error("Could not create socket");
@@ -22,37 +23,44 @@ int main(int argc, char** argv)
     server.sin_addr.s_addr = inet_addr(argv[1]);
     server.sin_family = AF_INET;
     server.sin_port = htons(my_getnbr(argv[2]));
- 
+
     //Connect to remote server
-    if (connect(sock , (struct sockaddr *)&server , sizeof(server)) < 0)
+    if (connect(sock, (struct sockaddr *)&server, sizeof(server)) < 0)
     {
         put_error("connect failed. Error");
         return 1;
     }
-     
+
     put_success("Connected\n");
-     
+
     //keep communicating with server
-    while(1)
+    while (1)
     {
-        recv(sock , server_reply , 2000 , 0);
-         
+        if (recv(sock, server_reply, 2000, 0) > 0)
+        {
+            put_info(server_reply);
+        }
+
         //puts("Server reply :");
-        put_info(server_reply);
         put_info("Enter message : ");
         char *message = readline();
-         
+
+        if (message == NULL)
+        {
+            message = my_strdup(" ");
+        }
         //Send some data
-        if( send(sock , message , my_strlen(message) , 0) < 0)
+
+        if (send(sock, message, my_strlen(message), 0) < 0)
         {
             put_error("Send failed");
             return 1;
         }
-         
+
         //Receive a reply from the server
-        
+
         //memset(server_reply, 0, 255);
     }
-    
+
     return 0;
 }
