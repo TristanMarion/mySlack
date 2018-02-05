@@ -11,10 +11,10 @@
 CC		= gcc
 NAME		= server
 BUILD_PATH	= obj
-SRC		= src/server.c src/main.c src/clients_list.c src/libmy.c src/color.c src/display.c
+SRC		= src/server.c src/main.c src/clients_list.c ../common/libmy.c ../common/color.c ../common/display.c 
+OBJ		= $(SRC:%.c=%.o)
 INCLUDES	= -I ../includes
 CFLAGS		= -W -Wextra -Werror -Wall -pedantic $(INCLUDES)
-OBJ		= $(SRC:%.c=$(BUILD_PATH)/%.o)
 
 MKDIR	= mkdir
 RM	= rm -f
@@ -25,17 +25,17 @@ RMDIR	= rm -rf
 all	: $(NAME)
 
 $(NAME)	: dirs $(OBJ)
-	$(CC) $(CFLAGS) $(OBJ) -o $(NAME)
+	$(CC) $(CFLAGS) $(addprefix $(BUILD_PATH)/, $(notdir $(OBJ))) -o $(NAME)
 
 dirs	:
-	$(MKDIR) -p $(dir $(OBJ))
+	$(MKDIR) -p $(BUILD_PATH)
 
-$(BUILD_PATH)/%.o : %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+%.o : %.c
+	$(CC) $(CFLAGS) -c $< -o $(BUILD_PATH)/$(notdir $@)
 
 clean	:
-	$(RM) $(OBJ)
-	$(RMDIR) $(dir $(OBJ))
+	$(RM) $(addprefix $(BUILD_PATH)/, $(notdir $(OBJ)))
+	$(RMDIR) $(BUILD_PATH)
 
 fclean	: clean
 	$(RM) $(NAME)
