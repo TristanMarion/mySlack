@@ -33,18 +33,18 @@ int main(int argc, char** argv)
     //keep communicating with server
     while(1)
     {
-        /*printf("Enter message : ");
-        scanf("%s" , message);
+        put_info("Enter message : ");
+        char *message = readline();
          
         //Send some data
-        if( send(sock , message , strlen(message) , 0) < 0)
+        if( send(sock , message , my_strlen(message) , 0) < 0)
         {
-            puts("Send failed");
+            put_error("Send failed");
             return 1;
         }
          
         //Receive a reply from the server
-        if( recv(sock , server_reply , 2000 , 0) < 0)
+        /*if( recv(sock , server_reply , 2000 , 0) < 0)
         {
             puts("recv failed");
             break;

@@ -105,3 +105,19 @@ int my_getnbr(char *str)
   return (nb * isneg);
 }
 
+char    *readline(void)
+{
+  ssize_t ret;
+  char    *buff;
+
+  if ((buff = malloc((50 + 1) * sizeof(char))) == NULL)
+    return (NULL);
+  if ((ret = read(0, buff, 50)) > 1)
+    {
+      buff[ret - 1] = '\0';
+      return (buff);
+    }
+  free(buff);
+  return (NULL);
+}
+
