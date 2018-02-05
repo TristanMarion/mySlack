@@ -1,4 +1,4 @@
-#include "includes.h"
+#include "includes_server.h"
 
 void put_title(char *title)
 {
