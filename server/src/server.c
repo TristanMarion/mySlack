@@ -42,8 +42,8 @@ int new_client(t_server *server)
         put_error("cannot accept\n");
     else
     {
-        display_clients(server);
         add_client_to_list(server, client);
+        display_clients(server);
     }
 
     return 0;
@@ -51,6 +51,7 @@ int new_client(t_server *server)
 
 void add_client_to_list(t_server *server, t_client *client)
 {
+    notify_new_client(server, client);
     welcome_message(client);
     client->prev = NULL;
     client->next = NULL;
@@ -70,27 +71,44 @@ void add_client_to_list(t_server *server, t_client *client)
 void display_clients(t_server *server)
 {
     t_client *tmp;
-    char *message;
 
-    message = my_strdup("A new user joined the server !\n");
     my_putstr_color("blue", "\nNumber of connected users : ");
-    my_put_nbr(server->clients_list->nb_clients + 1);
+    my_put_nbr(server->clients_list->nb_clients);
     my_putstr_color("cyan", "\n\nList of connected users :");
     tmp = server->clients_list->first_client;
     while (tmp != NULL)
     {
         my_putstr("\n\t - ");
         my_put_nbr(tmp->fd_id);
-        send(tmp->fd_id, message, my_strlen(message), 0);    
         tmp = tmp->next;
     }
 }
 
 void welcome_message(t_client *client)
 {
-    char *message = my_strdup("Welcome to the Tacos Team Server !\r\n");
+    char *message;
+
+    message = my_strdup("Welcome to the Tacos Team Server !\r\n");
+    send(client->fd_id, message, my_strlen(message), 0);    
     my_putstr_color("magenta", "\n\nAccepted new client with FD "); // TODO : Add client FD
     my_put_nbr(client->fd_id);
     my_putstr("\n");
-    send(client->fd_id, message, my_strlen(message), 0);
+}
+
+void notify_new_client(t_server *server, t_client *client)
+{
+    char *message;
+    t_client *tmp;
+    size_t needed;
+
+    needed = snprintf(NULL, 0, "%d joined the server !\n", client->fd_id) + 1;
+    message = malloc(needed);
+    snprintf(message, needed, "%d joined the server !\n", client->fd_id);
+    tmp = server->clients_list->first_client;
+    while (tmp != NULL)
+    {
+        send(tmp->fd_id, message, my_strlen(message), 0);
+        tmp = tmp->next;
+    }
+    free(message);
 }
