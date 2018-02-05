@@ -1,5 +1,5 @@
-#ifndef __INCLUDES_H__
-#define __INCLUDES_H__
+#ifndef __INCLUDES_SERVER_H__
+#define __INCLUDES_SERVER_H__
 
 #include "server.h"
 #include "client.h"

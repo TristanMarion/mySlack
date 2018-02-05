@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "server.h": "c",
-        "libmy.h": "c"
+        "libmy.h": "c",
+        "includes_server.h": "c"
     }
 }
