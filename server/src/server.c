@@ -122,7 +122,7 @@ void poll_incoming_messages(t_server *server)
         while ((read_size = recv(tmp->fd_id , server->client_message , 2000 , 0)) > 0)
         {
             put_info(server->client_message);
-            //send(tmp->fd_id, server->client_message, my_strlen(server->client_message), 0);
+            send(tmp->fd_id, server->client_message, my_strlen(server->client_message), 0);
         }
     }
 }
