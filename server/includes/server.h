@@ -22,5 +22,6 @@ int new_client(t_server *server);
 void add_client_to_list(t_server *server, t_client *client);
 void display_clients(t_server *server);
 void welcome_message(t_client *client);
+void notify_new_client(t_server *server, t_client *client);
 
 #endif

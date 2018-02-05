@@ -7,5 +7,6 @@
 #include "color.h"
 #include "display.h"
 #include "libmy.h"
+#include <stdio.h>
 
 #endif
