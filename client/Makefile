@@ -13,7 +13,7 @@ NAME		= client
 BUILD_PATH	= obj
 SRC		= src/main.c ../common/libmy.c ../common/color.c ../common/display.c 
 OBJ		= $(SRC:%.c=%.o)
-INCLUDES	= -I ../includes
+INCLUDES	= -I ../includes -I ./includes
 CFLAGS		= -W -Wextra -Werror -Wall -pedantic $(INCLUDES)
 
 MKDIR	= mkdir

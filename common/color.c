@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include "includes.h"
+#include "includes_common.h"
 
 const char *reset_color = "\033[0m";
 

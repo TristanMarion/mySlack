@@ -1,8 +1,4 @@
-#include<stdio.h> //printf
-#include<string.h>    //strlen
-#include<sys/socket.h>    //socket
-#include<arpa/inet.h> //inet_addr
-#include "includes.h"
+#include "includes_client.h"
  
 int main(int argc, char** argv)
 {
@@ -28,7 +24,7 @@ int main(int argc, char** argv)
     //Connect to remote server
     if (connect(sock , (struct sockaddr *)&server , sizeof(server)) < 0)
     {
-        perror("connect failed. Error");
+        put_error("connect failed. Error");
         return 1;
     }
      

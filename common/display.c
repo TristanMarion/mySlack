@@ -1,4 +1,4 @@
-#include "includes.h"
+#include "includes_common.h"
 
 void put_title(char *title)
 {
