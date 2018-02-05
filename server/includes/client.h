@@ -1,8 +1,7 @@
 #ifndef __CLIENT_H__
 #define __CLIENT_H__
 
-#include <stdlib.h>
-#include <netinet/in.h>
+#include "includes_server.h"
 
 typedef struct s_client
 {

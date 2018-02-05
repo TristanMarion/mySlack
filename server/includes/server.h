@@ -1,12 +1,7 @@
 #ifndef __SERVER_H__
 #define __SERVER_H__
 
-#include <stdlib.h>
-#include <sys/select.h>
-#include <sys/socket.h>
-#include <arpa/inet.h>
-
-#include "clients_list.h"
+#include "includes_server.h"
 
 typedef struct s_server
 {

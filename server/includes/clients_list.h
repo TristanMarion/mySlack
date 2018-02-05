@@ -1,7 +1,7 @@
 #ifndef __CLIENTS_LIST_H__
 #define __CLIENTS_LIST_H__
 
-#include "client.h"
+#include "includes_server.h"
 
 typedef struct s_clients_list
 {

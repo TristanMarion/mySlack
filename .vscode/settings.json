@@ -2,6 +2,10 @@
     "files.associations": {
         "server.h": "c",
         "libmy.h": "c",
-        "includes_server.h": "c"
+        "includes_server.h": "c",
+        "clients_list.h": "c",
+        "color.h": "c",
+        "in.h": "c",
+        "socket.h": "c"
     }
 }
