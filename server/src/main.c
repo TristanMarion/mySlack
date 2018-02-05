@@ -34,5 +34,6 @@ int main()
                 }
             }
         }
+        poll_incoming_messages(server);
     }
 }
