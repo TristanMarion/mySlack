@@ -112,3 +112,18 @@ void notify_new_client(t_server *server, t_client *client)
     }
     free(message);
 }
+
+void poll_incoming_messages(t_server *server)
+{
+    int read_size = 0;
+    t_client *tmp;
+    tmp = server->clients_list->first_client;
+    while (tmp != NULL) {
+        while ((read_size = recv(tmp->fd_id , server->client_message , 2000 , 0)) > 0)
+        {
+            put_info(server->client_message);
+            //send(tmp->fd_id, server->client_message, my_strlen(server->client_message), 0);
+        }
+    }
+}
+
