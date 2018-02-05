@@ -1,7 +1,9 @@
 #include "includes_client.h"
+#include <string.h>
  
 int main(int argc, char** argv)
 {
+    char server_reply[2000];
     if (argc != 3) {
         put_info("Usage : ./client serv_addr port\n");
         return (1);
@@ -33,6 +35,10 @@ int main(int argc, char** argv)
     //keep communicating with server
     while(1)
     {
+        recv(sock , server_reply , 2000 , 0);
+         
+        //puts("Server reply :");
+        put_info(server_reply);
         put_info("Enter message : ");
         char *message = readline();
          
@@ -44,14 +50,8 @@ int main(int argc, char** argv)
         }
          
         //Receive a reply from the server
-        /*if( recv(sock , server_reply , 2000 , 0) < 0)
-        {
-            puts("recv failed");
-            break;
-        }
-         
-        puts("Server reply :");
-        puts(server_reply);*/
+        
+        //memset(server_reply, 0, 255);
     }
     
     return 0;
