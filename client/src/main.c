@@ -4,8 +4,13 @@
 #include<arpa/inet.h> //inet_addr
 #include "includes.h"
  
-int main()
+int main(int argc, char** argv)
 {
+    if (argc != 3) {
+        put_info("Usage : ./client serv_addr port\n");
+        return (1);
+    }
+
     int sock;
     struct sockaddr_in server;
     //char message[1000] , server_reply[2000];
@@ -16,9 +21,9 @@ int main()
     {
         put_error("Could not create socket");
     }
-    server.sin_addr.s_addr = inet_addr("0.0.0.0");
+    server.sin_addr.s_addr = inet_addr(argv[1]);
     server.sin_family = AF_INET;
-    server.sin_port = htons(12345);
+    server.sin_port = htons(my_getnbr(argv[2]));
  
     //Connect to remote server
     if (connect(sock , (struct sockaddr *)&server , sizeof(server)) < 0)
