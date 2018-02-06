@@ -9,8 +9,9 @@ typedef struct s_server
     struct sockaddr_in  serv_addr;
     fd_set              fds;
     t_clients_list		*clients_list;
-    char 				client_message[2000];
 } t_server;
+
+#define MAX_LEN 1024
 
 t_server *create_server(uint);
 int init_server(t_server *server);

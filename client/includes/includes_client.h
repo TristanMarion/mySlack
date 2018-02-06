@@ -7,4 +7,6 @@
 #include "libmy.h"
 #include "display.h"
 
+#define MAX_LEN 1024
+
 #endif

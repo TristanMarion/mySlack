@@ -147,28 +147,34 @@ void poll_events(t_server *server, t_client *client)
     int read_size;
     size_t needed;
     char *message;
+    char read[MAX_LEN];
     t_client *current_client;
 
-    if ((read_size = recv(client->fd_id, server->client_message, 2000, 0)) > 0)
+    if ((read_size = recv(client->fd_id, read, MAX_LEN - 1, 0)) > 0)
     {
-        needed = snprintf(NULL, 0, "%d : %s !\n", client->fd_id, server->client_message) + 1;
+        read[read_size] = 0;
+        needed = snprintf(NULL, 0, "%d : %s", client->fd_id, read) + 1;
         message = malloc(needed);
-        snprintf(message, needed, "%d : %s !\n", client->fd_id, server->client_message);
+        snprintf(message, needed, "%d : %s", client->fd_id, read);
     }
     else
     {
-        needed = snprintf(NULL, 0, "%d left the server !\n", client->fd_id) + 1;
+        needed = snprintf(NULL, 0, "%d left the server !", client->fd_id) + 1;
         message = malloc(needed);
-        snprintf(message, needed, "%d left the server !\n", client->fd_id);
+        snprintf(message, needed, "%d left the server !", client->fd_id);
         remove_client_from_list(server, client);
     }
     put_info(message);
-    current_client = server->clients_list->first_client;    
+    current_client = server->clients_list->first_client;
     while (current_client != NULL)
     {
-        send(current_client->fd_id, message, my_strlen(message), 0);
+        if (current_client->fd_id != client->fd_id)
+        {
+            send(current_client->fd_id, message, my_strlen(message), 0);
+        }
         current_client = current_client->next;
     }
+    free(message);
 }
 
 void main_loop(t_server *server)

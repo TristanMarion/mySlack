@@ -75,49 +75,55 @@ int my_strcmp(const char *s1, const char *s2)
     return (0);
 }
 
-
 int my_getnbr(char *str)
 {
-  int   nb;
-  int   isneg;
-  int   i;
+    int nb;
+    int isneg;
+    int i;
 
-  isneg = 1;
-  nb = 0;
-  i = 0;
-  while (str[i] == '+' || str[i] == '-')
+    isneg = 1;
+    nb = 0;
+    i = 0;
+    while (str[i] == '+' || str[i] == '-')
     {
-      if (str[i] == '-')
-    isneg = isneg * -1;
-      i = i + 1;
+        if (str[i] == '-')
+            isneg = isneg * -1;
+        i = i + 1;
     }
-  while (str[i] != '\0')
+    while (str[i] != '\0')
     {
-      if (str[i] >= '0' && str[i] <= '9')
-    {
-      nb = nb * 10;
-      nb = nb + str[i] - '0';
-      i = i + 1;
+        if (str[i] >= '0' && str[i] <= '9')
+        {
+            nb = nb * 10;
+            nb = nb + str[i] - '0';
+            i = i + 1;
+        }
+        else
+            return (nb * isneg);
     }
-      else
     return (nb * isneg);
-    }
-  return (nb * isneg);
 }
 
-char    *readline(void)
+char *readline(void)
 {
-  ssize_t ret;
-  char    *buff;
+    ssize_t ret;
+    char *buff;
 
-  if ((buff = malloc((50 + 1) * sizeof(char))) == NULL)
-    return (NULL);
-  if ((ret = read(0, buff, 50)) > 1)
+    if ((buff = malloc((50 + 1) * sizeof(char))) == NULL)
+        return (NULL);
+    if ((ret = read(0, buff, 50)) > 1)
     {
-      buff[ret - 1] = '\0';
-      return (buff);
+        buff[ret - 1] = '\0';
+        return (buff);
     }
-  free(buff);
-  return (NULL);
+    free(buff);
+    return (NULL);
 }
 
+void my_reset(char *str, int size)
+{
+    int i;
+
+    for (i = 0; i < size; i++)
+        str[i] = '\0';
+}
