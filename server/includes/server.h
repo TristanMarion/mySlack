@@ -13,12 +13,14 @@ typedef struct s_server
 } t_server;
 
 t_server *create_server(uint);
-void init_server(t_server *server);
+int init_server(t_server *server);
 int new_client(t_server *server);
 void add_client_to_list(t_server *server, t_client *client);
 void display_clients(t_server *server);
 void welcome_message(t_client *client);
 void notify_new_client(t_server *server, t_client *client);
-void poll_incoming_messages(t_server *server);
+void poll_events(t_server *server, t_client *client);
+void main_loop(t_server *server);
+void remove_client_from_list(t_server *server, t_client *client);
 
 #endif
