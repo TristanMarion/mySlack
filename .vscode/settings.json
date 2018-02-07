@@ -8,6 +8,7 @@
         "in.h": "c",
         "socket.h": "c",
         "stdlib.h": "c",
-        "includes_client.h": "c"
+        "includes_client.h": "c",
+        "stdio.h": "c"
     }
 }

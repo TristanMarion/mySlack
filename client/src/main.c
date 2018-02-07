@@ -3,7 +3,7 @@
 
 int main(int argc, char **argv)
 {
-    char server_reply[MAX_LEN];
+    char message[MAX_LEN], server_reply[MAX_LEN];
     if (argc != 3)
     {
         put_info("Usage : ./client serv_addr port\n");
@@ -12,9 +12,7 @@ int main(int argc, char **argv)
 
     int sock;
     struct sockaddr_in server;
-    //char message[1000] , server_reply[2000];
 
-    //Create socket
     sock = socket(AF_INET, SOCK_STREAM, 0);
     if (sock == -1)
     {
@@ -24,7 +22,6 @@ int main(int argc, char **argv)
     server.sin_family = AF_INET;
     server.sin_port = htons(my_getnbr(argv[2]));
 
-    //Connect to remote server
     if (connect(sock, (struct sockaddr *)&server, sizeof(server)) < 0)
     {
         put_error("connect failed. Error");
@@ -33,34 +30,45 @@ int main(int argc, char **argv)
 
     put_success("Connected\n");
 
-    //keep communicating with server
+    fd_set fds;
+
     while (1)
     {
-        if (recv(sock, server_reply, MAX_LEN -1, 0) > 0)
+        FD_ZERO(&fds);
+        FD_SET(0, &fds);
+        FD_SET(sock, &fds);
+        if (select(sock + 1, &fds, NULL, NULL, NULL) < 0)
         {
-            put_info(server_reply);
-            my_reset(server_reply, MAX_LEN);
+            put_error("select()");
+            return (1);
         }
 
-        //puts("Server reply :");
-        // put_info("Enter message : ");
-        // char *message = readline();
-
-        // if (message == NULL)
-        // {
-        //     message = my_strdup(" ");
-        // }
-        //Send some data
-
-        // if (send(sock, message, my_strlen(message), 0) < 0)
-        // {
-        //     put_error("Send failed");
-        //     return 1;
-        // }
-
-        //Receive a reply from the server
-
-        //memset(server_reply, 0, 255);
+        if (FD_ISSET(0, &fds))
+        {
+            read(0, message, MAX_LEN - 1);
+            {
+                char *p = NULL;
+                p = my_strstr(message, "\n");
+                if (p != NULL)
+                {
+                    *p = 0;
+                }
+                else
+                {
+                    message[MAX_LEN - 2] = '\n';
+                    message[MAX_LEN - 1] = 0;
+                }
+            }
+            send(sock, message, my_strlen(message), 0);
+        }
+        else if (FD_ISSET(sock, &fds))
+        {
+            if (recv(sock, server_reply, MAX_LEN - 1, 0) > 0)
+            {
+                put_info(server_reply);
+                my_reset(server_reply, MAX_LEN);
+            }
+        }
     }
 
     return 0;
