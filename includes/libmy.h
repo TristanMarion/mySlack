@@ -8,7 +8,8 @@ void my_put_nbr(int n);
 char *my_strdup(const char *str);
 int my_strcmp(const char *s1, const char *s2);
 int my_getnbr(char *str);
-char    *readline(void);
-void    *my_reset(char*, int);
+char *readline(void);
+void *my_reset(char *, int);
+char *my_strstr(char *str, char *to_find);
 
 #endif
