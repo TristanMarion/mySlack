@@ -23,5 +23,7 @@ void notify_new_client(t_server *server, t_client *client);
 void poll_events(t_server *server, t_client *client);
 void main_loop(t_server *server);
 void remove_client_from_list(t_server *server, t_client *client);
+char **parse_command(char *str, char delimiter);
+int get_nb_field(char *str, char delimiter);
 
 #endif

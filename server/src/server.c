@@ -178,6 +178,47 @@ void poll_events(t_server *server, t_client *client)
     free(message);
 }
 
+int     get_nb_field(char *str, char delimiter)
+{
+    int i = 0;
+    int nb_field = 1;
+
+    while (str[i] != '\0')
+    {
+        if (str[i] == delimiter)
+        {
+            nb_field++;
+        }
+        i++;
+    }
+    return (nb_field);
+}
+
+char    **parse_command(char *str, char delimiter)
+{
+    int j = 0;
+    int len = 0;
+    int nb_field = get_nb_field(str, delimiter);
+    char **tab = malloc(sizeof(char*) * nb_field);
+
+    for (int i = 0 ; i < nb_field ; i++)
+    {
+        while (str[j] != delimiter && str[j] != '\0')
+        {
+            len++;
+            j++;
+        }
+        tab[i] = malloc(len * sizeof(char));
+        for (int k = 0 ; k < len ; k++)
+        {
+            tab[i][k] = str[j - len + k];
+        }
+        len = 0;
+        j++;
+    }
+    return tab;
+}
+
 void main_loop(t_server *server)
 {
     t_client *current_client;
