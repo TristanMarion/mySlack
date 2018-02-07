@@ -48,13 +48,14 @@ int main(int argc, char **argv)
             read(0, message, MAX_LEN - 1);
             {
                 char *p = NULL;
-                p = my_strstr(message, "\n") + 1;
+                p = my_strstr(message, "\n");
                 if (p != NULL)
                 {
                     *p = 0;
                 }
                 else
                 {
+                    message[MAX_LEN - 2] = '\n';
                     message[MAX_LEN - 1] = 0;
                 }
             }
