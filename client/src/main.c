@@ -3,7 +3,7 @@
 
 int main(int argc, char **argv)
 {
-    char server_reply[2000];
+    char server_reply[MAX_LEN];
     if (argc != 3)
     {
         put_info("Usage : ./client serv_addr port\n");
@@ -36,26 +36,27 @@ int main(int argc, char **argv)
     //keep communicating with server
     while (1)
     {
-        if (recv(sock, server_reply, 2000, 0) > 0)
+        if (recv(sock, server_reply, MAX_LEN -1, 0) > 0)
         {
             put_info(server_reply);
+            my_reset(server_reply, MAX_LEN);
         }
 
         //puts("Server reply :");
-        put_info("Enter message : ");
-        char *message = readline();
+        // put_info("Enter message : ");
+        // char *message = readline();
 
-        if (message == NULL)
-        {
-            message = my_strdup(" ");
-        }
+        // if (message == NULL)
+        // {
+        //     message = my_strdup(" ");
+        // }
         //Send some data
 
-        if (send(sock, message, my_strlen(message), 0) < 0)
-        {
-            put_error("Send failed");
-            return 1;
-        }
+        // if (send(sock, message, my_strlen(message), 0) < 0)
+        // {
+        //     put_error("Send failed");
+        //     return 1;
+        // }
 
         //Receive a reply from the server
 

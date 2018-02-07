@@ -20,12 +20,23 @@ t_server *create_server(uint port)
     return server;
 }
 
-void init_server(t_server *server)
+int init_server(t_server *server)
 {
-    listen(server->sockfd, 5); // on dit a notre socket d'ecouter d'eventuelles connexions entrante, avec un buffer de 5 (buffer d'attente, man listen)
+    put_info("Server up\n");
+    if ((bind(server->sockfd, (struct sockaddr *)&(server->serv_addr), sizeof(server->serv_addr))) < 0) // on bind notre socket au port et a l'interface, et on verifie bien le retour
+    {
+        put_error("bind()");
+        return (1);
+    }
 
-    FD_ZERO(&(server->fds));                // on init notre fd_set
-    FD_SET(server->sockfd, &(server->fds)); // on ne met dans notre fd_set que la socket serveur, les autres FDs ne nous interessent pas pour l'exemple
+    if (listen(server->sockfd, 5) < 0) // on dit a notre socket d'ecouter d'eventuelles connexions entrante, avec un buffer de 5 (buffer d'attente, man listen)
+    {
+        put_error("bind()");
+        return (1);
+    }
+    put_success("Server bind success\n");
+    put_info("Waiting for connections\n");
+    return (0);
 }
 
 int new_client(t_server *server)
@@ -68,6 +79,24 @@ void add_client_to_list(t_server *server, t_client *client)
     server->clients_list->nb_clients++;
 }
 
+void remove_client_from_list(t_server *server, t_client *client)
+{
+    t_clients_list *clients_list;
+
+    clients_list = server->clients_list;
+    if (clients_list->first_client == NULL || client == NULL)
+        return;
+    if (clients_list->first_client == client)
+        clients_list->first_client = client->next;
+    if (clients_list->last_client == client)
+        clients_list->last_client = client->prev;
+    if (client->next != NULL)
+        client->next->prev = client->prev;
+    if (client->prev != NULL)
+        client->prev->next = client->next;
+    clients_list->nb_clients--;
+}
+
 void display_clients(t_server *server)
 {
     t_client *tmp;
@@ -82,6 +111,7 @@ void display_clients(t_server *server)
         my_put_nbr(tmp->fd_id);
         tmp = tmp->next;
     }
+    my_putstr("\n");
 }
 
 void welcome_message(t_client *client)
@@ -89,7 +119,7 @@ void welcome_message(t_client *client)
     char *message;
 
     message = my_strdup("Welcome to the Tacos Team Server !\r\n");
-    send(client->fd_id, message, my_strlen(message), 0);    
+    send(client->fd_id, message, my_strlen(message), 0);
     my_putstr_color("magenta", "\n\nAccepted new client with FD "); // TODO : Add client FD
     my_put_nbr(client->fd_id);
     my_putstr("\n");
@@ -113,17 +143,82 @@ void notify_new_client(t_server *server, t_client *client)
     free(message);
 }
 
-void poll_incoming_messages(t_server *server)
+void poll_events(t_server *server, t_client *client)
 {
-    int read_size = 0;
-    t_client *tmp;
-    tmp = server->clients_list->first_client;
-    while (tmp != NULL) {
-        while ((read_size = recv(tmp->fd_id , server->client_message , 2000 , 0)) > 0)
+    int read_size;
+    size_t needed;
+    char *message;
+    char read[MAX_LEN];
+    t_client *current_client;
+
+    if ((read_size = recv(client->fd_id, read, MAX_LEN - 1, 0)) > 0)
+    {
+        read[read_size] = 0;
+        needed = snprintf(NULL, 0, "%d : %s", client->fd_id, read) + 1;
+        message = malloc(needed);
+        snprintf(message, needed, "%d : %s", client->fd_id, read);
+    }
+    else
+    {
+        needed = snprintf(NULL, 0, "%d left the server !\n", client->fd_id) + 1;
+        message = malloc(needed);
+        snprintf(message, needed, "%d left the server !\n", client->fd_id);
+        remove_client_from_list(server, client);
+    }
+    put_info(message);
+    current_client = server->clients_list->first_client;
+    while (current_client != NULL)
+    {
+        if (current_client->fd_id != client->fd_id)
         {
-            put_info(server->client_message);
-            send(tmp->fd_id, server->client_message, my_strlen(server->client_message), 0);
+            send(current_client->fd_id, message, my_strlen(message), 0);
+        }
+        current_client = current_client->next;
+    }
+    free(message);
+}
+
+void main_loop(t_server *server)
+{
+    t_client *current_client;
+    int max;
+    while (1)
+    {
+        FD_ZERO(&(server->fds));
+        FD_SET(server->sockfd, &(server->fds));
+        max = server->sockfd;
+
+        current_client = server->clients_list->first_client;
+        while (current_client != NULL)
+        {
+            FD_SET(current_client->fd_id, &(server->fds));
+            max = current_client->fd_id > max ? current_client->fd_id : max;
+            current_client = current_client->next;
+        }
+
+        if (select(max + 1, &(server->fds), NULL, NULL, NULL) < 0)
+        {
+            put_error("select()");
+            return;
+        }
+
+        if (FD_ISSET(server->sockfd, &(server->fds)))
+        {
+            if (new_client(server) != 0)
+            {
+                put_error("new client");
+                return;
+            }
+        }
+
+        current_client = server->clients_list->first_client;
+        while (current_client != NULL)
+        {
+            if (FD_ISSET(current_client->fd_id, &(server->fds)))
+            {
+                poll_events(server, current_client);
+            }
+            current_client = current_client->next;
         }
     }
 }
-
