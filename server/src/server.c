@@ -111,6 +111,7 @@ void display_clients(t_server *server)
         my_put_nbr(tmp->fd_id);
         tmp = tmp->next;
     }
+    my_putstr("\n");
 }
 
 void welcome_message(t_client *client)
@@ -159,9 +160,9 @@ void poll_events(t_server *server, t_client *client)
     }
     else
     {
-        needed = snprintf(NULL, 0, "%d left the server !", client->fd_id) + 1;
+        needed = snprintf(NULL, 0, "%d left the server !\n", client->fd_id) + 1;
         message = malloc(needed);
-        snprintf(message, needed, "%d left the server !", client->fd_id);
+        snprintf(message, needed, "%d left the server !\n", client->fd_id);
         remove_client_from_list(server, client);
     }
     put_info(message);
