@@ -9,6 +9,7 @@
         "socket.h": "c",
         "stdlib.h": "c",
         "includes_client.h": "c",
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "client.h": "c"
     }
 }

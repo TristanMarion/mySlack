@@ -10,6 +10,7 @@ typedef struct s_client
     struct sockaddr_in  		cli_addr;
     struct s_client 			*prev;
     struct s_client 			*next;
+    char                        nickname[NICKNAME_MAX_LEN];
 } t_client;
 
 #endif
