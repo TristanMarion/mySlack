@@ -5,7 +5,7 @@ void send_message(int fd, char *message)
     int needed;
     char *sent_message;
     char *command = get_command(message);
-    message = get_message(message);
+    message = get_core_message(message);
 
     needed = snprintf(NULL, 0, "%s;%s", command, message) + 1;
     sent_message = malloc(needed);
@@ -13,7 +13,7 @@ void send_message(int fd, char *message)
     send(fd, sent_message, my_strlen(sent_message), 0);
 }
 
-char *get_message(char *message)
+char *get_core_message(char *message)
 {
 	int i;
 	int j;
