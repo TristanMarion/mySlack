@@ -166,24 +166,31 @@ int     get_nb_field(char *str, char delimiter)
 char    **parse_command(char *str, char delimiter)
 {
     int j = 0;
+    int i = 0;
+    int k = 0;
     int len = 0;
     int nb_field = get_nb_field(str, delimiter);
-    char **tab = malloc(sizeof(char*) * nb_field);
+    char **tab = malloc(sizeof(char*) * (nb_field + 1));
 
-    for (int i = 0 ; i < nb_field ; i++)
+    while (i < nb_field)
     {
         while (str[j] != delimiter && str[j] != '\0')
         {
             len++;
             j++;
         }
-        tab[i] = malloc(len * sizeof(char));
-        for (int k = 0 ; k < len ; k++)
+        tab[i] = malloc((len + 1) * sizeof(char));
+        k = 0;
+        while (k < len)
         {
             tab[i][k] = str[j - len + k];
+            k++;
         }
+        tab[i][k] = 0;
         len = 0;
         j++;
+        i++;
     }
+    tab[i] = NULL;
     return tab;
 }
