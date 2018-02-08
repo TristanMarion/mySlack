@@ -16,5 +16,6 @@
 #include "color.h"
 #include "display.h"
 #include "libmy.h"
+#include "command.h"
 
 #endif

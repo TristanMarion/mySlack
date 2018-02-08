@@ -6,8 +6,11 @@
 #include <arpa/inet.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <stdio.h>
+
 #include "libmy.h"
 #include "display.h"
+#include "client.h"
 
 #define MAX_LEN 1024
 
