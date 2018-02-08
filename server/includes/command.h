@@ -13,4 +13,6 @@ void manage_message(t_server *server, t_client *client, char *message);
 
 void send_message(t_server *server, t_client *client, char **splitted_message);
 
+void list_commands(t_server *server, t_client *client, char **splitted_message);
+
 #endif
