@@ -11,8 +11,6 @@ typedef struct s_server
     t_clients_list		*clients_list;
 } t_server;
 
-#define MAX_LEN 1024
-
 t_server *create_server(uint);
 int init_server(t_server *server);
 int new_client(t_server *server);

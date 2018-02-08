@@ -23,13 +23,13 @@ t_server *create_server(uint port)
 int init_server(t_server *server)
 {
     put_info("Server up\n");
-    if ((bind(server->sockfd, (struct sockaddr *)&(server->serv_addr), sizeof(server->serv_addr))) < 0) // on bind notre socket au port et a l'interface, et on verifie bien le retour
+    if ((bind(server->sockfd, (struct sockaddr *)&(server->serv_addr), sizeof(server->serv_addr))) < 0)
     {
         put_error("bind()");
         return (1);
     }
 
-    if (listen(server->sockfd, 5) < 0) // on dit a notre socket d'ecouter d'eventuelles connexions entrante, avec un buffer de 5 (buffer d'attente, man listen)
+    if (listen(server->sockfd, 5) < 0)
     {
         put_error("bind()");
         return (1);
@@ -48,8 +48,8 @@ int new_client(t_server *server)
         return 1;
     }
     client->clilen = sizeof(client->cli_addr);
-    client->fd_id = accept(server->sockfd, (struct sockaddr *)&(client->cli_addr), &(client->clilen)); // on accept la nouvelle connexion, tmp contiendra le FD du nouveau client
-    if (client->fd_id < 0)                                                                             // on check les erreurs
+    client->fd_id = accept(server->sockfd, (struct sockaddr *)&(client->cli_addr), &(client->clilen));
+    if (client->fd_id < 0)
         put_error("cannot accept\n");
     else
     {
@@ -62,6 +62,7 @@ int new_client(t_server *server)
 
 void add_client_to_list(t_server *server, t_client *client)
 {
+    recv(client->fd_id, client->nickname, NICKNAME_MAX_LEN, 0);
     notify_new_client(server, client);
     welcome_message(client);
     client->prev = NULL;
@@ -117,12 +118,16 @@ void display_clients(t_server *server)
 void welcome_message(t_client *client)
 {
     char *message;
+    int needed;
 
     message = my_strdup("Welcome to the Tacos Team Server !\r\n");
     send(client->fd_id, message, my_strlen(message), 0);
-    my_putstr_color("magenta", "\n\nAccepted new client with FD "); // TODO : Add client FD
-    my_put_nbr(client->fd_id);
-    my_putstr("\n");
+    free(message);
+    needed = snprintf(NULL, 0, "%s joined the server with FD %d !\n", client->nickname, client->fd_id) + 1;
+    message = malloc(needed);
+    snprintf(message, needed, "%s joined the server with FD %d !\n", client->nickname, client->fd_id);
+    put_info(message);
+    free(message);
 }
 
 void notify_new_client(t_server *server, t_client *client)
@@ -131,9 +136,9 @@ void notify_new_client(t_server *server, t_client *client)
     t_client *tmp;
     size_t needed;
 
-    needed = snprintf(NULL, 0, "%d joined the server !\n", client->fd_id) + 1;
+    needed = snprintf(NULL, 0, "%s joined the server !\n", client->nickname) + 1;
     message = malloc(needed);
-    snprintf(message, needed, "%d joined the server !\n", client->fd_id);
+    snprintf(message, needed, "%s joined the server !\n", client->nickname);
     tmp = server->clients_list->first_client;
     while (tmp != NULL)
     {
@@ -154,15 +159,15 @@ void poll_events(t_server *server, t_client *client)
     if ((read_size = recv(client->fd_id, read, MAX_LEN - 1, 0)) > 0)
     {
         read[read_size] = 0;
-        needed = snprintf(NULL, 0, "%d : %s", client->fd_id, read) + 1;
+        needed = snprintf(NULL, 0, "%s : %s", client->nickname, read) + 1;
         message = malloc(needed);
-        snprintf(message, needed, "%d : %s", client->fd_id, read);
+        snprintf(message, needed, "%s : %s", client->nickname, read);
     }
     else
     {
-        needed = snprintf(NULL, 0, "%d left the server !\n", client->fd_id) + 1;
+        needed = snprintf(NULL, 0, "%s left the server !\n", client->nickname) + 1;
         message = malloc(needed);
-        snprintf(message, needed, "%d left the server !\n", client->fd_id);
+        snprintf(message, needed, "%s left the server !\n", client->nickname);
         remove_client_from_list(server, client);
     }
     put_info(message);
