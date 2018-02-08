@@ -146,3 +146,51 @@ char *my_strstr(char *str, char *to_find)
     else
         return (NULL);
 }
+
+int     get_nb_field(char *str, char delimiter)
+{
+    int i = 0;
+    int nb_field = 1;
+
+    while (str[i] != '\0')
+    {
+        if (str[i] == delimiter)
+        {
+            nb_field++;
+        }
+        i++;
+    }
+    return (nb_field);
+}
+
+char    **parse_command(char *str, char delimiter)
+{
+    int j = 0;
+    int i = 0;
+    int k = 0;
+    int len = 0;
+    int nb_field = get_nb_field(str, delimiter);
+    char **tab = malloc(sizeof(char*) * (nb_field + 1));
+
+    while (i < nb_field)
+    {
+        while (str[j] != delimiter && str[j] != '\0')
+        {
+            len++;
+            j++;
+        }
+        tab[i] = malloc((len + 1) * sizeof(char));
+        k = 0;
+        while (k < len)
+        {
+            tab[i][k] = str[j - len + k];
+            k++;
+        }
+        tab[i][k] = 0;
+        len = 0;
+        j++;
+        i++;
+    }
+    tab[i] = NULL;
+    return tab;
+}
