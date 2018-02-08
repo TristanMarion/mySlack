@@ -21,5 +21,6 @@ void notify_new_client(t_server *server, t_client *client);
 void poll_events(t_server *server, t_client *client);
 void main_loop(t_server *server);
 void remove_client_from_list(t_server *server, t_client *client);
+void disconnect(t_server *server, t_client *client);
 
 #endif

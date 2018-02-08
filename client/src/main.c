@@ -60,7 +60,7 @@ int main(int argc, char **argv)
                     message[MAX_LEN - 1] = 0;
                 }
             }
-            send(sock, message, my_strlen(message), 0);
+            send_message(sock, message);
         }
         else if (FD_ISSET(sock, &fds))
         {
