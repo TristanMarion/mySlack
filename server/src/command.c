@@ -53,12 +53,19 @@ void list_commands(t_server *server, t_client *client, char **splitted_message)
     (void) server;
     (void) splitted_message;
     int i;
+    int len;
     t_server_command current_command;
+    char *all_commands = NULL;
 
     i = 0;
+    len = 0;
     while ((current_command = server_command_array[i]).command != NULL)
     {
-        send(client->fd_id, current_command.command, my_strlen(current_command.command), 0);
+        len += my_strlen(current_command.command) + 1;
+        all_commands = realloc(all_commands, len);
+        my_strcat(all_commands, current_command.command);
+        my_strcat(all_commands, "\n");
         i++;
     }
+    send(client->fd_id, all_commands, my_strlen(all_commands), 0);
 }
