@@ -7,6 +7,7 @@ typedef struct s_server_command
 {
     char *command;
     void (*cmd_ptr)(t_server *server, t_client *client, char **splitted_message);
+    char *description;
 } t_server_command;
 
 void manage_message(t_server *server, t_client *client, char *message);
