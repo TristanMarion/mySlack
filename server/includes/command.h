@@ -10,9 +10,11 @@ typedef struct s_server_command
 } t_server_command;
 
 void manage_message(t_server *server, t_client *client, char *message);
+void send_error(t_client *client, char *error_message);
 
 void send_message(t_server *server, t_client *client, char **splitted_message);
-
 void list_commands(t_server *server, t_client *client, char **splitted_message);
+void direct_message(t_server *server, t_client *client, char **splitted_message);
+void send_direct_message(t_client *client, int target, char *message);
 
 #endif
