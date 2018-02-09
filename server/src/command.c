@@ -10,6 +10,7 @@ void manage_message(t_server *server, t_client *client, char *message)
     int i;
     char **splitted_message;
     t_server_command current_command;
+    char *response;
 
     splitted_message = parse_command(message, ';');
     i = 0;
@@ -18,9 +19,12 @@ void manage_message(t_server *server, t_client *client, char *message)
         if (my_strcmp(splitted_message[0], current_command.command) == 0)
         {
             current_command.cmd_ptr(server, client, splitted_message);
+            return;
         }
         i++;
     }
+    response = my_strdup("Unknown command. Type /list_commands to show available commands.");
+    send(client->fd_id, response, my_strlen(response), 0);
 }
 
 void send_message(t_server *server, t_client *client, char **splitted_message)
