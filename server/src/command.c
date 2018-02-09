@@ -97,14 +97,17 @@ void help(t_server *server, t_client *client, char **splitted_message)
     splitted_core_message = parse_command(splitted_message[1], ' ');
     if (my_strcmp(splitted_core_message[0], "") == 0)
     {
-        send_error(client, my_strdup("Usage: /help <command>"));
+        send_error(client, my_strdup("Usage: /help <command>, available commands : /list_commands"));
         return;
     }
     while ((current_command = server_command_array[i]).command != NULL)
     {
         if (my_strcmp(current_command.command, splitted_core_message[0]) == 0)
         {
-            send(client->fd_id, current_command.description, my_strlen(current_command.description), 0);
+            needed = snprintf(NULL, 0, "%s : %s", current_command.command, current_command.description) + 1;
+            sent_message = malloc(needed);
+            snprintf(sent_message, needed, "%s : %s", current_command.command, current_command.description);
+            send(client->fd_id, sent_message, my_strlen(sent_message), 0);
             return;
         }
         i++;
