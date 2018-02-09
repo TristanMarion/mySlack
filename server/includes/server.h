@@ -9,9 +9,10 @@ typedef struct s_server
     struct sockaddr_in  serv_addr;
     fd_set              fds;
     t_clients_list		*clients_list;
+    uint 				max_clients;
 } t_server;
 
-t_server *create_server(uint);
+t_server *create_server(uint, uint);
 int init_server(t_server *server);
 int new_client(t_server *server);
 void add_client_to_list(t_server *server, t_client *client);

@@ -1,6 +1,6 @@
 #include "includes_server.h"
 
-t_server *create_server(uint port)
+t_server *create_server(uint port, uint max_clients)
 {
     t_server *server;
     if ((server = malloc(sizeof(t_server))) == NULL)
@@ -17,6 +17,7 @@ t_server *create_server(uint port)
     server->serv_addr.sin_family = AF_INET;
     server->serv_addr.sin_addr.s_addr = inet_addr("0.0.0.0");
     server->clients_list = new_clients_list();
+    server->max_clients = max_clients;
     return server;
 }
 
@@ -42,6 +43,7 @@ int init_server(t_server *server)
 int new_client(t_server *server)
 {
     t_client *client;
+    char *error_message;
     if ((client = malloc(sizeof(t_client))) == NULL)
     {
         put_error("client error\n");
@@ -54,12 +56,17 @@ int new_client(t_server *server)
     else
     {
         recv(client->fd_id, client->nickname, NICKNAME_MAX_LEN, 0);
+        if (server->max_clients <= server->clients_list->nb_clients)
+        {
+            error_message = my_strdup("Sorry the server is full. Please log out and try again.");
+            send(client->fd_id, error_message, my_strlen(error_message), 0);
+            return 0;
+        }
         if (!check_nickname(server, client))
             return 0;
         add_client_to_list(server, client);
         display_clients(server);
     }
-
     return 0;
 }
 
