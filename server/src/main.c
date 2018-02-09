@@ -3,7 +3,7 @@
 int main()
 {
     t_server *server;
-    if ((server = create_server(12345, 4)) == NULL)
+    if ((server = create_server("config")) == NULL)
     {
         put_error("server error");
         return (1);
