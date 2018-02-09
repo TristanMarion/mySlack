@@ -98,8 +98,7 @@ void direct_message(t_server *server, t_client *client, char **splitted_message)
     {
         if (my_strcmp(current_client->nickname, splitted_core_message[0]) == 0)
         {
-            // TODO : Use implode function to send the whole splitted_core_message except first element
-            send_direct_message(client, current_client->fd_id, splitted_core_message[1]);
+            send_direct_message(client, current_client->fd_id, my_implode(splitted_core_message, " ", 1));
             return;
         }
         current_client = current_client->next;
@@ -113,9 +112,9 @@ void send_direct_message(t_client *client, int target, char *message)
     int needed;
     char *sent_message;
 
-    needed = snprintf(NULL, 0, "%s : %s", client->nickname, message) + 1;
+    needed = snprintf(NULL, 0, "/!\\ DM - %s : %s", client->nickname, message) + 1;
     sent_message = malloc(needed);
-    snprintf(sent_message, needed, "%s : %s", client->nickname, message);
+    snprintf(sent_message, needed, "/!\\ DM - %s : %s", client->nickname, message);
     send(target, sent_message, my_strlen(sent_message), 0);
     free(sent_message);
 }

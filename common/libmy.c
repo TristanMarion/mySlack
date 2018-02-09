@@ -215,3 +215,21 @@ char    *my_strcat(char *str1, char *str2)
   str1[i] = '\0';
   return (str1); 
 }
+
+char *my_implode(char **tab, char *str, int offset)
+{
+    int length;
+    char *current_element;
+    char *imploded_string;
+
+    length = 0;
+    imploded_string = NULL;
+    while ((current_element = tab[offset++]) != NULL)
+    {
+        length += my_strlen(current_element) + 1;
+        imploded_string = realloc(imploded_string, length);
+        my_strcat(imploded_string, current_element);
+        my_strcat(imploded_string, str);
+    }
+    return imploded_string;
+}
