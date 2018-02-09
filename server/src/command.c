@@ -3,6 +3,8 @@
 const t_server_command server_command_array[] = {
     {"send_message", send_message},
     {"list_commands", list_commands},
+    {"commands_list", list_commands},
+    {"help", list_commands},
     {"direct_message", direct_message},
     {NULL, NULL}};
 
