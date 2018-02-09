@@ -53,6 +53,9 @@ int new_client(t_server *server)
         put_error("cannot accept\n");
     else
     {
+        recv(client->fd_id, client->nickname, NICKNAME_MAX_LEN, 0);
+        if (!check_nickname(server, client))
+            return 0;
         add_client_to_list(server, client);
         display_clients(server);
     }
@@ -60,9 +63,31 @@ int new_client(t_server *server)
     return 0;
 }
 
+int check_nickname(t_server *server, t_client *client)
+{
+    t_client *current_client;
+    char *error_message;
+    int is_nickname_ok;
+
+    current_client = server->clients_list->first_client;
+    error_message = my_strdup("Sorry, this username is already used. Please log out and try another one.");
+    is_nickname_ok = 1;
+    while (current_client != NULL && is_nickname_ok)
+    {
+        if (my_strcmp(current_client->nickname, client->nickname) == 0)
+        {
+            is_nickname_ok = 0;
+        }
+        current_client = current_client->next;
+    }
+    if (!is_nickname_ok)
+        send(client->fd_id, error_message, my_strlen(error_message), 0);
+    free(error_message);
+    return (is_nickname_ok);
+}
+
 void add_client_to_list(t_server *server, t_client *client)
 {
-    recv(client->fd_id, client->nickname, NICKNAME_MAX_LEN, 0);
     notify_new_client(server, client);
     welcome_message(client);
     client->prev = NULL;
@@ -167,7 +192,7 @@ void poll_events(t_server *server, t_client *client)
 void disconnect(t_server *server, t_client *client)
 {
     int needed;
-    char * message;
+    char *message;
     t_client *current_client;
 
     needed = snprintf(NULL, 0, "%s left the server !\n", client->nickname) + 1;
