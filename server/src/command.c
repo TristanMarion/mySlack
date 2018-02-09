@@ -4,7 +4,7 @@ const t_server_command server_command_array[] = {
     {"send_message", send_message, "Sends a message to all connected users"},
     {"list_commands", list_commands, "Lists all available commands"},
     {"commands_list", list_commands, "Lists all available commands"},
-    {"help", list_commands, "Gives informations about a command, or lists all available commands"},
+    {"help", help, "Gives informations about a command, or lists all available commands"},
     {"direct_message", direct_message, "Sends a direct message to a user"},
     {NULL, NULL, NULL}};
 
@@ -82,6 +82,40 @@ void list_commands(t_server *server, t_client *client, char **splitted_message)
         i++;
     }
     send(client->fd_id, all_commands, my_strlen(all_commands), 0);
+}
+
+void help(t_server *server, t_client *client, char **splitted_message)
+{
+    (void)server;
+    t_server_command current_command;
+    int needed;
+    char *sent_message;
+    char **splitted_core_message;
+    int i;
+
+    i = 0;
+    splitted_core_message = parse_command(splitted_message[1], ' ');
+    if (my_strcmp(splitted_core_message[0], "") == 0)
+    {
+        send_error(client, my_strdup("Usage: /help <command>, available commands : /list_commands"));
+        return;
+    }
+    while ((current_command = server_command_array[i]).command != NULL)
+    {
+        if (my_strcmp(current_command.command, splitted_core_message[0]) == 0)
+        {
+            needed = snprintf(NULL, 0, "%s : %s", current_command.command, current_command.description) + 1;
+            sent_message = malloc(needed);
+            snprintf(sent_message, needed, "%s : %s", current_command.command, current_command.description);
+            send(client->fd_id, sent_message, my_strlen(sent_message), 0);
+            return;
+        }
+        i++;
+    }
+    needed = snprintf(NULL, 0, "Unknown command %s", splitted_core_message[0]) + 1;
+    sent_message = malloc(needed);
+    snprintf(sent_message, needed, "Unknown command %s", splitted_core_message[0]);
+    send_error(client, sent_message);
 }
 
 void direct_message(t_server *server, t_client *client, char **splitted_message)
