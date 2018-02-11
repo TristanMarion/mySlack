@@ -1,6 +1,6 @@
 #include "includes_server.h"
 
-t_server *create_server(uint port)
+t_server *create_server(char *path)
 {
     t_server *server;
     if ((server = malloc(sizeof(t_server))) == NULL)
@@ -13,7 +13,8 @@ t_server *create_server(uint port)
         put_error("socket()");
         return NULL;
     }
-    server->serv_addr.sin_port = htons(port);
+    server->serv_config = get_config(path);
+    server->serv_addr.sin_port = htons(server->serv_config->port);
     server->serv_addr.sin_family = AF_INET;
     server->serv_addr.sin_addr.s_addr = inet_addr("0.0.0.0");
     server->clients_list = new_clients_list();
@@ -42,6 +43,7 @@ int init_server(t_server *server)
 int new_client(t_server *server)
 {
     t_client *client;
+    char *error_message;
     if ((client = malloc(sizeof(t_client))) == NULL)
     {
         put_error("client error\n");
@@ -54,12 +56,17 @@ int new_client(t_server *server)
     else
     {
         recv(client->fd_id, client->nickname, NICKNAME_MAX_LEN, 0);
+        if (server->serv_config->max_clients <= server->clients_list->nb_clients)
+        {
+            error_message = my_strdup("Sorry the server is full. Please log out and try again.");
+            send(client->fd_id, error_message, my_strlen(error_message), 0);
+            return 0;
+        }
         if (!check_nickname(server, client))
             return 0;
         add_client_to_list(server, client);
         display_clients(server);
     }
-
     return 0;
 }
 
@@ -207,6 +214,34 @@ void disconnect(t_server *server, t_client *client)
         current_client = current_client->next;
     }
     free(message);
+}
+
+t_config *get_config(char *path)
+{
+    t_config *config;
+    FILE *file;
+    char buffer[255];
+    char **tab;
+
+    config = malloc(sizeof(t_config));
+    config->port = 12345;
+    config->max_clients = 4;
+    if ((file = fopen(path, "r")))
+    {
+        while (fgets(buffer, 255, file) != NULL)
+        {
+            tab = parse_command(buffer, ':');
+            if (tab[0] != NULL && tab[1] != NULL)
+            {
+                if (my_strcmp("port", tab[0]) == 0)
+                    config->port = my_getnbr(tab[1]);
+                if (my_strcmp("max_clients", tab[0]) == 0)
+                    config->max_clients = my_getnbr(tab[1]);
+            }
+        }
+        fclose(file);
+    }
+    return config;
 }
 
 void main_loop(t_server *server)

@@ -3,15 +3,23 @@
 
 #include "includes_server.h"
 
+
+typedef struct s_config
+{
+	uint port;
+	uint max_clients;
+} t_config;
+
 typedef struct s_server
 {
     int                 sockfd;
     struct sockaddr_in  serv_addr;
+    struct s_config		*serv_config;
     fd_set              fds;
     t_clients_list		*clients_list;
 } t_server;
 
-t_server *create_server(uint);
+t_server *create_server(char *path);
 int init_server(t_server *server);
 int new_client(t_server *server);
 void add_client_to_list(t_server *server, t_client *client);
@@ -23,5 +31,6 @@ void main_loop(t_server *server);
 void remove_client_from_list(t_server *server, t_client *client);
 void disconnect(t_server *server, t_client *client);
 int check_nickname(t_server *server, t_client *client);
+t_config *get_config(char *path);
 
 #endif
