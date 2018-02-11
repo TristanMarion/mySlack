@@ -11,6 +11,7 @@ typedef struct s_client
     struct s_client 			*prev;
     struct s_client 			*next;
     char                        nickname[NICKNAME_MAX_LEN];
+    struct s_channel 			*current_channel;
 } t_client;
 
 #endif

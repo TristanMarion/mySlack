@@ -2,12 +2,13 @@
 #define __SERVER_H__
 
 #include "includes_server.h"
-
+#include "channel.h"
 
 typedef struct s_config
 {
-	uint port;
-	uint max_clients;
+	uint 				port;
+	uint 				max_clients;
+	t_channels_list		*channels_list;
 } t_config;
 
 typedef struct s_server
@@ -32,5 +33,8 @@ void remove_client_from_list(t_server *server, t_client *client);
 void disconnect(t_server *server, t_client *client);
 int check_nickname(t_server *server, t_client *client);
 t_config *get_config(char *path);
+void add_channel(t_channels_list *channels_list, char *name);
+t_channels_list *get_channels_list(char *channels);
+t_channel *get_channel(t_server *server, char *name);
 
 #endif

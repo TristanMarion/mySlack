@@ -17,5 +17,6 @@
 #include "display.h"
 #include "libmy.h"
 #include "command.h"
+#include "channel.h"
 
 #endif
