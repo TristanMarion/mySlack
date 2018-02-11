@@ -97,6 +97,7 @@ void add_client_to_list(t_server *server, t_client *client)
 {
     notify_new_client(server, client);
     welcome_message(client);
+    client->current_channel = server->serv_config->channels_list->first_channel;
     client->prev = NULL;
     client->next = NULL;
     if (server->clients_list->last_client == NULL)
@@ -180,6 +181,26 @@ void notify_new_client(t_server *server, t_client *client)
     free(message);
 }
 
+void add_channel(t_channels_list *channels_list, char *name)
+{
+    t_channel *channel;
+
+    channel = malloc(sizeof(t_channel));
+    channel->name = my_strdup(name);
+    channel->prev = NULL;
+    channel->next = NULL;
+    if (channels_list->last_channel == NULL)
+    {
+        channels_list->first_channel = channel;
+    }
+    else
+    {
+        channel->prev = channels_list->last_channel;
+        channels_list->last_channel->next = channel;
+    }
+    channels_list->last_channel = channel;
+}
+
 void poll_events(t_server *server, t_client *client)
 {
     int read_size;
@@ -226,6 +247,7 @@ t_config *get_config(char *path)
     config = malloc(sizeof(t_config));
     config->port = 12345;
     config->max_clients = 4;
+    config->channels_list = NULL;
     if ((file = fopen(path, "r")))
     {
         while (fgets(buffer, 255, file) != NULL)
@@ -237,11 +259,55 @@ t_config *get_config(char *path)
                     config->port = my_getnbr(tab[1]);
                 if (my_strcmp("max_clients", tab[0]) == 0)
                     config->max_clients = my_getnbr(tab[1]);
+                if (my_strcmp("channels", tab[0]) == 0)
+                    config->channels_list = get_channels_list(tab[1]);
             }
         }
         fclose(file);
     }
+    if (config->channels_list == NULL)
+    {
+        config->channels_list = malloc(sizeof(t_channels_list));
+        add_channel(config->channels_list, "General");
+    }
     return config;
+}
+
+t_channels_list *get_channels_list(char *channels)
+{
+    t_channels_list *channels_list;
+    int i;
+    char **each_channel;
+    
+    i = 0;
+    channels_list = malloc(sizeof(channels_list));
+    if (channels[my_strlen(channels) - 1] == '\n')
+       channels[my_strlen(channels) - 1] = 0; 
+    each_channel = parse_command(channels, ',');
+    while (each_channel[i])
+    {
+        add_channel(channels_list, each_channel[i]);
+        i++;
+    }
+    return (channels_list);
+}
+
+t_channel *get_channel(t_server *server, char *name)
+{
+    t_channel *current_channel;
+
+    current_channel = server->serv_config->channels_list->first_channel;
+    while (current_channel != NULL)
+    {
+        if (my_strcmp(current_channel->name, name) == 0)
+        {
+            free(name);
+            return (current_channel);
+        }
+        current_channel = current_channel->next;
+    }
+    free(name);
+    return (server->serv_config->channels_list->first_channel);
 }
 
 void main_loop(t_server *server)

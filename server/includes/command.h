@@ -18,5 +18,12 @@ void list_commands(t_server *server, t_client *client, char **splitted_message);
 void direct_message(t_server *server, t_client *client, char **splitted_message);
 void send_direct_message(t_client *client, int target, char *message);
 void help(t_server *server, t_client *client, char **splitted_message);
+void list_channels(t_server *server, t_client *client, char **splitted_message);
+void join(t_server *server, t_client *client, char **splitted_message);
+void leave(t_server *server, t_client *client, char **splitted_message);
+int check_channel_availability(t_server *server, char *name);
+void create(t_server *server, t_client *client, char **splitted_message);
+void notify_channel(t_server *server, t_client *client, char *action);
+void ping(t_server *server, t_client *client, char **splitted_message);
 
 #endif
