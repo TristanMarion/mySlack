@@ -75,22 +75,11 @@ void setup_client(t_server *server, t_client *client)
 {
     char received_infos[NICKNAME_MAX_LEN];
     char **client_infos;
-    t_channel *current_channel;
 
     recv(client->fd_id, received_infos, NICKNAME_MAX_LEN, 0);
     client_infos = parse_command(received_infos, ';');
     my_strcpy(client->nickname, client_infos[0]);
-    current_channel = server->serv_config->channels_list->first_channel;
-    while (current_channel != NULL)
-    {
-        if (my_strcmp(current_channel->name, client_infos[1]) == 0)
-            client->current_channel = current_channel;
-        current_channel = current_channel->next;
-    }
-    if (client->current_channel == NULL)
-    {
-        client->current_channel = server->serv_config->channels_list->first_channel;
-    }
+    client->current_channel = get_channel(server, client_infos[1]);
 }
 
 int check_nickname(t_server *server, t_client *client)
