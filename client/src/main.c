@@ -4,9 +4,9 @@
 int main(int argc, char **argv)
 {
     char message[MAX_LEN], server_reply[MAX_LEN];
-    if (argc != 4)
+    if (argc < 4 || argc > 5)
     {
-        put_info("Usage : ./client serv_addr port nickname\n");
+        put_info("Usage : ./client <serv_addr> <port> <nickname> [channel]\n");
         return (1);
     }
 
@@ -29,7 +29,7 @@ int main(int argc, char **argv)
     }
 
     put_success("Connected\n");
-    send(sock, argv[3], my_strlen(argv[3]), 0);
+    send_infos(sock, argv);
 
     fd_set fds;
 

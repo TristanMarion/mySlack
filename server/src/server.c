@@ -44,6 +44,7 @@ int new_client(t_server *server)
 {
     t_client *client;
     char *error_message;
+
     if ((client = malloc(sizeof(t_client))) == NULL)
     {
         put_error("client error\n");
@@ -55,7 +56,7 @@ int new_client(t_server *server)
         put_error("cannot accept\n");
     else
     {
-        recv(client->fd_id, client->nickname, NICKNAME_MAX_LEN, 0);
+        setup_client(server, client);
         if (server->serv_config->max_clients <= server->clients_list->nb_clients)
         {
             error_message = my_strdup("Sorry the server is full. Please log out and try again.");
@@ -68,6 +69,28 @@ int new_client(t_server *server)
         display_clients(server);
     }
     return 0;
+}
+
+void setup_client(t_server *server, t_client *client)
+{
+    char received_infos[NICKNAME_MAX_LEN];
+    char **client_infos;
+    t_channel *current_channel;
+
+    recv(client->fd_id, received_infos, NICKNAME_MAX_LEN, 0);
+    client_infos = parse_command(received_infos, ';');
+    my_strcpy(client->nickname, client_infos[0]);
+    current_channel = server->serv_config->channels_list->first_channel;
+    while (current_channel != NULL)
+    {
+        if (my_strcmp(current_channel->name, client_infos[1]) == 0)
+            client->current_channel = current_channel;
+        current_channel = current_channel->next;
+    }
+    if (client->current_channel == NULL)
+    {
+        client->current_channel = server->serv_config->channels_list->first_channel;
+    }
 }
 
 int check_nickname(t_server *server, t_client *client)
@@ -97,7 +120,6 @@ void add_client_to_list(t_server *server, t_client *client)
 {
     notify_new_client(server, client);
     welcome_message(client);
-    client->current_channel = server->serv_config->channels_list->first_channel;
     client->prev = NULL;
     client->next = NULL;
     if (server->clients_list->last_client == NULL)
