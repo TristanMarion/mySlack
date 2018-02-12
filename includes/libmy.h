@@ -15,5 +15,6 @@ char **parse_command(char *str, char delimiter);
 int get_nb_field(char *str, char delimiter);
 char *my_strcat(char *str1, char *str2);
 char *my_implode(char **tab, char *str, int offset);
+char *my_strcpy(char *dest, char *src);
 
 #endif

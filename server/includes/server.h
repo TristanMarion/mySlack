@@ -36,5 +36,6 @@ t_config *get_config(char *path);
 void add_channel(t_channels_list *channels_list, char *name);
 t_channels_list *get_channels_list(char *channels);
 t_channel *get_channel(t_server *server, char *name);
+void setup_client(t_server *server, t_client *client);
 
 #endif

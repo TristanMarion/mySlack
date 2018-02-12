@@ -147,7 +147,7 @@ char *my_strstr(char *str, char *to_find)
         return (NULL);
 }
 
-int     get_nb_field(char *str, char delimiter)
+int get_nb_field(char *str, char delimiter)
 {
     int i = 0;
     int nb_field = 1;
@@ -163,14 +163,14 @@ int     get_nb_field(char *str, char delimiter)
     return (nb_field);
 }
 
-char    **parse_command(char *str, char delimiter)
+char **parse_command(char *str, char delimiter)
 {
     int j = 0;
     int i = 0;
     int k = 0;
     int len = 0;
     int nb_field = get_nb_field(str, delimiter);
-    char **tab = malloc(sizeof(char*) * (nb_field + 1));
+    char **tab = malloc(sizeof(char *) * (nb_field + 1));
 
     while (i < nb_field)
     {
@@ -195,25 +195,25 @@ char    **parse_command(char *str, char delimiter)
     return tab;
 }
 
-char    *my_strcat(char *str1, char *str2)
+char *my_strcat(char *str1, char *str2)
 {
-  int   i;
-  int   j;
+    int i;
+    int j;
 
-  i = 0;
-  j = 0;
-  while (str1[i] != '\0')
+    i = 0;
+    j = 0;
+    while (str1[i] != '\0')
     {
-      i++;
+        i++;
     }
-  while (str2[j] != '\0')
+    while (str2[j] != '\0')
     {
-      str1[i] = str2[j];
-      i++;
-      j++;
+        str1[i] = str2[j];
+        i++;
+        j++;
     }
-  str1[i] = '\0';
-  return (str1); 
+    str1[i] = '\0';
+    return (str1);
 }
 
 char *my_implode(char **tab, char *str, int offset)
@@ -232,4 +232,18 @@ char *my_implode(char **tab, char *str, int offset)
         my_strcat(imploded_string, str);
     }
     return imploded_string;
+}
+
+char *my_strcpy(char *dest, char *src)
+{
+    int i;
+
+    i = 0;
+    while (src[i] != '\0')
+    {
+        dest[i] = src[i];
+        i++;
+    }
+    dest[i] = '\0';
+    return (dest);
 }
