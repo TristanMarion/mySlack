@@ -278,11 +278,11 @@ t_channels_list *get_channels_list(char *channels)
     t_channels_list *channels_list;
     int i;
     char **each_channel;
-    
+
     i = 0;
     channels_list = malloc(sizeof(channels_list));
     if (channels[my_strlen(channels) - 1] == '\n')
-       channels[my_strlen(channels) - 1] = 0; 
+        channels[my_strlen(channels) - 1] = 0;
     each_channel = parse_command(channels, ',');
     while (each_channel[i])
     {
@@ -314,9 +314,12 @@ void main_loop(t_server *server)
 {
     t_client *current_client;
     int max;
+    char message[MAX_LEN];
+
     while (1)
     {
         FD_ZERO(&(server->fds));
+        FD_SET(0, &(server->fds));
         FD_SET(server->sockfd, &(server->fds));
         max = server->sockfd;
 
@@ -341,6 +344,25 @@ void main_loop(t_server *server)
                 put_error("new client");
                 return;
             }
+        }
+
+        if (FD_ISSET(0, &(server->fds)))
+        {
+            read(0, message, MAX_LEN - 1);
+            {
+                char *p = NULL;
+                p = my_strstr(message, "\n");
+                if (p != NULL)
+                {
+                    *p = 0;
+                }
+                else
+                {
+                    message[MAX_LEN - 2] = '\n';
+                    message[MAX_LEN - 1] = 0;
+                }
+            }
+            send_server_message(server, message);
         }
 
         current_client = server->clients_list->first_client;

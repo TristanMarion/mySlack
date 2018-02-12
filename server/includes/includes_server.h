@@ -10,6 +10,7 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <stdio.h>
+#include <unistd.h>
 #include "client.h"
 #include "clients_list.h"
 #include "server.h"

@@ -25,5 +25,6 @@ int check_channel_availability(t_server *server, char *name);
 void create(t_server *server, t_client *client, char **splitted_message);
 void notify_channel(t_server *server, t_client *client, char *action);
 void ping(t_server *server, t_client *client, char **splitted_message);
+void send_server_message(t_server *server, char *message);
 
 #endif
