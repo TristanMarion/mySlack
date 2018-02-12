@@ -54,14 +54,31 @@ void send_message(t_server *server, t_client *client, char **splitted_message)
     snprintf(message, needed, "[%s] %s : %s", client->current_channel->name, client->nickname, splitted_message[1]);
     while (current_client != NULL)
     {
-        if (current_client->fd_id != client->fd_id
-            && my_strcmp(current_client->current_channel->name, client->current_channel->name) == 0)
+        if (current_client->fd_id != client->fd_id && my_strcmp(current_client->current_channel->name, client->current_channel->name) == 0)
         {
             send(current_client->fd_id, message, my_strlen(message), 0);
         }
         current_client = current_client->next;
     }
     free(message);
+}
+
+void send_server_message(t_server *server, char *message)
+{
+    t_client *current_client;
+    int needed;
+    char *sent_message;
+
+    current_client = server->clients_list->first_client;
+    needed = snprintf(NULL, 0, "[SERVER] %s", message) + 1;
+    sent_message = malloc(needed);
+    snprintf(sent_message, needed, "[SERVER] %s", message);
+    while (current_client != NULL)
+    {
+        send(current_client->fd_id, sent_message, my_strlen(sent_message), 0);
+        current_client = current_client->next;
+    }
+    free(sent_message);
 }
 
 void list_commands(t_server *server, t_client *client, char **splitted_message)
@@ -247,8 +264,7 @@ void notify_channel(t_server *server, t_client *client, char *action)
     current_client = server->clients_list->first_client;
     while (current_client != NULL)
     {
-        if (my_strcmp(current_client->current_channel->name, client->current_channel->name) == 0
-            && current_client->fd_id != client->fd_id)
+        if (my_strcmp(current_client->current_channel->name, client->current_channel->name) == 0 && current_client->fd_id != client->fd_id)
         {
             send(current_client->fd_id, message, my_strlen(message), 0);
         }
