@@ -12,7 +12,8 @@
         "stdio.h": "c",
         "client.h": "c",
         "command.h": "c",
-        "includes_common.h": "c"
+        "includes_common.h": "c",
+        "channel.h": "c"
     },
     "c-cpp-flylint.clang.warnings": [
         "all",
