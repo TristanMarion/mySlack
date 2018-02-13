@@ -98,7 +98,7 @@ int check_nickname(t_server *server, t_client *client)
 void add_client_to_list(t_server *server, t_client *client)
 {
     notify_new_client(server, client);
-    welcome_message(client);
+    welcome_message(server, client);
     client->prev = NULL;
     client->next = NULL;
     if (server->clients_list->last_client == NULL)
@@ -149,14 +149,18 @@ void display_clients(t_server *server)
     my_putstr("\n");
 }
 
-void welcome_message(t_client *client)
+void welcome_message(t_server *server, t_client *client)
 {
     char *message;
     int needed;
 
-    message = my_strdup("Welcome to the Tacos Team Server !\r\n");
+    message = NULL;
+    needed = snprintf(NULL, 0, server->serv_config->welcome_message, client->nickname) + 1;
+    message = malloc(needed);
+    snprintf(message, needed, server->serv_config->welcome_message, client->nickname);
     send(client->fd_id, message, my_strlen(message), 0);
     free(message);
+
     needed = snprintf(NULL, 0, "%s joined the server with FD %d !\n", client->nickname, client->fd_id) + 1;
     message = malloc(needed);
     snprintf(message, needed, "%s joined the server with FD %d !\n", client->nickname, client->fd_id);
@@ -249,6 +253,7 @@ t_config *get_config(char *path)
     config->port = 12345;
     config->max_clients = 4;
     config->channels_list = NULL;
+    config->welcome_message = my_strdup("Bienvenue !");
     if ((file = fopen(path, "r")))
     {
         while (fgets(buffer, 255, file) != NULL)
@@ -262,6 +267,8 @@ t_config *get_config(char *path)
                     config->max_clients = my_getnbr(tab[1]);
                 if (my_strcmp("channels", tab[0]) == 0)
                     config->channels_list = get_channels_list(tab[1]);
+                if (my_strcmp("welcome", tab[0]) == 0)
+                    config->welcome_message = tab[1];
             }
         }
         fclose(file);

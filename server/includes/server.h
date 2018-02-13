@@ -9,6 +9,7 @@ typedef struct s_config
 	uint 				port;
 	uint 				max_clients;
 	t_channels_list		*channels_list;
+	char 				*welcome_message;
 } t_config;
 
 typedef struct s_server
@@ -25,7 +26,7 @@ int init_server(t_server *server);
 int new_client(t_server *server);
 void add_client_to_list(t_server *server, t_client *client);
 void display_clients(t_server *server);
-void welcome_message(t_client *client);
+void welcome_message(t_server *server, t_client *client);
 void notify_new_client(t_server *server, t_client *client);
 void poll_events(t_server *server, t_client *client);
 void main_loop(t_server *server);
