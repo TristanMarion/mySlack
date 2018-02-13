@@ -276,6 +276,8 @@ t_config *get_config(char *path)
     if (config->channels_list == NULL)
     {
         config->channels_list = malloc(sizeof(t_channels_list));
+        config->channels_list->first_channel = NULL;
+        config->channels_list->last_channel = NULL;
         add_channel(config->channels_list, "General");
     }
     return config;
@@ -289,6 +291,8 @@ t_channels_list *get_channels_list(char *channels)
 
     i = 0;
     channels_list = malloc(sizeof(channels_list));
+    channels_list->first_channel = NULL;
+    channels_list->last_channel = NULL;
     if (channels[my_strlen(channels) - 1] == '\n')
         channels[my_strlen(channels) - 1] = 0;
     each_channel = parse_command(channels, ',');
