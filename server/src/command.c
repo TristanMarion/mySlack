@@ -87,11 +87,10 @@ void list_commands(t_server *server, t_client *client, char **splitted_message)
 
     i = 0;
     len = my_strlen("List of all server commands :\n");
-    all_commands = malloc(len);
     all_commands = my_strdup("List of all server commands :\n");
     while ((current_command = server_command_array[i]).command != NULL)
     {
-        len += my_strlen(current_command.command) + my_strlen(current_command.description) + 7;
+        len += my_strlen(current_command.command) + my_strlen(current_command.description) + 8;
         all_commands = realloc(all_commands, len);
         my_strcat(all_commands, "\t- ");
         my_strcat(all_commands, current_command.command);
