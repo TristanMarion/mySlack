@@ -4,7 +4,7 @@ const t_server_command server_command_array[] = {
     {"send_message", send_message, "Sends a message to all connected users"},
     {"list_commands", list_commands, "Lists all available commands"},
     {"commands_list", list_commands, "Lists all available commands"},
-    {"help", help, "Gives informations about a command, or lists all available commands"},
+    {"help", help, "Gives informations about a command, or explains how to get the list of available commands"},
     {"direct_message", direct_message, "Sends a direct message to a user"},
     {"list_channels", list_channels, "Lists all available channels"},
     {"join", join, "Joins the specified channel"},
