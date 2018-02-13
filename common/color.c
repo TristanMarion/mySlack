@@ -18,6 +18,12 @@ static const t_color g_color[] = {{"clear", "\033[H\033[2J"},
                                   {"blue", "\033[34m"},
                                   {"magenta", "\033[35m"},
                                   {"cyan", "\033[36m"},
+                                  {"bold_red", "\033[1;31m"},
+                                  {"bold_green", "\033[1;32m"},
+                                  {"bold_yellow", "\033[1;33m"},
+                                  {"bold_blue", "\033[1;34m"},
+                                  {"bold_magenta", "\033[1;35m"},
+                                  {"bold_cyan", "\033[1;36m"},
                                   {NULL, NULL}};
 
 void my_putstr_color(const char *color, const char *str)

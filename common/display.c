@@ -16,21 +16,21 @@ void put_stat(char *label, int value)
 	my_putchar('\n');
 }
 
-void put_success(char* message)
+void put_success(char *message)
 {
 	my_putstr_color("green", "✔ ");
 	my_putstr_color("green", message);
 	my_putchar('\n');
 }
 
-void put_error(char* message)
+void put_error(char *message)
 {
 	my_putstr_color("red", "✘ ");
 	my_putstr_color("red", message);
 	my_putchar('\n');
 }
 
-void put_info(char* message)
+void put_info(char *message)
 {
 	my_putstr_color("blue", "ℹ ");
 	my_putstr_color("blue", message);
