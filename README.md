@@ -22,7 +22,7 @@ The server broadcasts any message sent by a user to all connected clients on thi
 
 When launching the client, the user must pass multiple parameters in the CLI : host address, port, nickname, and optionally a channel.
 
-The client will then be connected to the server and will be assigned the chosen nickname. If a channel was defined in the CLI arguments then, the client would automatically join this channel. Otherwise, the client will join the default channel.
+The client will then be connected to the server and will be assigned the chosen nickname. If a channel was defined in the CLI arguments, then the client would automatically join this channel. Otherwise, the client will join the default channel.
 
 When the server sends a message to the client, the message is displayed. Generally it is a channel message but sometimes a server message can be sent (in this case the message is marked as a server message).
 
