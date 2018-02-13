@@ -84,25 +84,15 @@ void setup_client(t_server *server, t_client *client)
 
 int check_nickname(t_server *server, t_client *client)
 {
-    t_client *current_client;
+    t_client *same_nickname_client;
     char *error_message;
-    int is_nickname_ok;
 
-    current_client = server->clients_list->first_client;
     error_message = my_strdup("Sorry, this username is already used. Please log out and try another one.");
-    is_nickname_ok = 1;
-    while (current_client != NULL && is_nickname_ok)
-    {
-        if (my_strcmp(current_client->nickname, client->nickname) == 0)
-        {
-            is_nickname_ok = 0;
-        }
-        current_client = current_client->next;
-    }
-    if (!is_nickname_ok)
+    same_nickname_client = get_client(server, client->nickname);
+    if (same_nickname_client != NULL)
         send(client->fd_id, error_message, my_strlen(error_message), 0);
     free(error_message);
-    return (is_nickname_ok);
+    return (same_nickname_client == NULL);
 }
 
 void add_client_to_list(t_server *server, t_client *client)
@@ -386,4 +376,18 @@ void main_loop(t_server *server)
             current_client = current_client->next;
         }
     }
+}
+
+t_client *get_client(t_server *server, char *name)
+{
+    t_client *current_client;
+
+    current_client = server->clients_list->first_client;
+    while (current_client != NULL)
+    {
+        if (my_strcmp(current_client->nickname, name) == 0)
+            return (current_client);
+        current_client = current_client->next;
+    }
+    return (NULL);
 }
