@@ -147,11 +147,10 @@ void help(t_server *server, t_client *client, char **splitted_message)
 
 void direct_message(t_server *server, t_client *client, char **splitted_message)
 {
-    t_client *current_client;
+    t_client *target_client;
     char **splitted_core_message;
 
     splitted_core_message = parse_command(splitted_message[1], ' ');
-    current_client = server->clients_list->first_client;
     if (splitted_core_message[0] == NULL || splitted_core_message[1] == NULL)
     {
         send_error(client, my_strdup("Usage : /direct_message <nickname> <message>"));
@@ -162,27 +161,21 @@ void direct_message(t_server *server, t_client *client, char **splitted_message)
         send_error(client, my_strdup("WHAT THE FUCK ARE YOU DOING"));
         return;
     }
-    while (current_client != NULL)
-    {
-        if (my_strcmp(current_client->nickname, splitted_core_message[0]) == 0)
-        {
-            send_direct_message(client, current_client->fd_id, my_implode(splitted_core_message, " ", 1));
-            return;
-        }
-        current_client = current_client->next;
-    }
-    send_error(client, my_strdup("User not found"));
+    if ((target_client = get_client(server, splitted_core_message[0])) != NULL)
+        send_direct_message(client->nickname, target_client->fd_id, my_implode(splitted_core_message, " ", 1));
+    else
+        send_error(client, my_strdup("User not found"));
     return;
 }
 
-void send_direct_message(t_client *client, int target, char *message)
+void send_direct_message(char *nickname, int target, char *message)
 {
     int needed;
     char *sent_message;
 
-    needed = snprintf(NULL, 0, "/!\\ DM - %s : %s", client->nickname, message) + 1;
+    needed = snprintf(NULL, 0, "/!\\ DM - %s : %s", nickname, message) + 1;
     sent_message = malloc(needed);
-    snprintf(sent_message, needed, "/!\\ DM - %s : %s", client->nickname, message);
+    snprintf(sent_message, needed, "/!\\ DM - %s : %s", nickname, message);
     send(target, sent_message, my_strlen(sent_message), 0);
     free(sent_message);
 }
