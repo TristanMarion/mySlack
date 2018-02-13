@@ -154,8 +154,6 @@ void welcome_message(t_server *server, t_client *client)
     char *message;
     int needed;
 
-    put_info(server->serv_config->welcome_message);
-
     message = NULL;
     needed = snprintf(NULL, 0, server->serv_config->welcome_message, client->nickname) + 1;
     message = malloc(needed);
