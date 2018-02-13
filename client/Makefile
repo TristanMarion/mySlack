@@ -11,7 +11,7 @@
 CC		= gcc
 NAME		= client
 BUILD_PATH	= obj
-SRC		= src/main.c src/client.c \
+SRC		= src/main.c src/client.c src/message.c \
 			../common/libmy.c ../common/color.c ../common/display.c 
 OBJ		= $(SRC:%.c=%.o)
 INCLUDES	= -I ../includes -I ./includes
