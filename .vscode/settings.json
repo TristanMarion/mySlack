@@ -10,6 +10,12 @@
         "stdlib.h": "c",
         "includes_client.h": "c",
         "stdio.h": "c",
-        "client.h": "c"
-    }
+        "client.h": "c",
+        "command.h": "c",
+        "includes_common.h": "c"
+    },
+    "c-cpp-flylint.clang.warnings": [
+        "all",
+        "extra"
+      ]
 }
