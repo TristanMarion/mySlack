@@ -1,3 +1,4 @@
 port:12345
 max_clients:4
+welcome:Bienvenue à toi %s !
 channels:General,Random
