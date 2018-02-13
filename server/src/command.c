@@ -15,21 +15,15 @@ const t_server_command server_command_array[] = {
 
 void manage_message(t_server *server, t_client *client, char *message)
 {
-    int i;
     char **splitted_message;
-    t_server_command current_command;
+    const t_server_command *command;
     char *response;
 
     splitted_message = parse_command(message, ';');
-    i = 0;
-    while ((current_command = server_command_array[i]).command != NULL)
+    if ((command = get_command(splitted_message[0])) != NULL)
     {
-        if (my_strcmp(splitted_message[0], current_command.command) == 0)
-        {
-            current_command.cmd_ptr(server, client, splitted_message);
-            return;
-        }
-        i++;
+        command->cmd_ptr(server, client, splitted_message);
+        return;
     }
     response = my_strdup("Unknown command. Type /list_commands to show available commands.");
     send(client->fd_id, response, my_strlen(response), 0);
@@ -113,36 +107,30 @@ void list_commands(t_server *server, t_client *client, char **splitted_message)
 void help(t_server *server, t_client *client, char **splitted_message)
 {
     (void)server;
-    t_server_command current_command;
+    const t_server_command *command;
     int needed;
     char *sent_message;
     char **splitted_core_message;
-    int i;
 
-    i = 0;
     splitted_core_message = parse_command(splitted_message[1], ' ');
     if (my_strcmp(splitted_core_message[0], "") == 0)
     {
         send_error(client, my_strdup("Usage: /help <command>, available commands : /list_commands"));
         return;
     }
-    while ((current_command = server_command_array[i]).command != NULL)
+    if ((command = get_command(splitted_core_message[0])) != NULL)
     {
-        if (my_strcmp(current_command.command, splitted_core_message[0]) == 0)
-        {
-            needed = snprintf(NULL, 0, "%s : %s", current_command.command, current_command.description) + 1;
-            sent_message = malloc(needed);
-            snprintf(sent_message, needed, "%s : %s", current_command.command, current_command.description);
-            send(client->fd_id, sent_message, my_strlen(sent_message), 0);
-            return;
-        }
-        i++;
+        needed = snprintf(NULL, 0, "%s : %s", command->command, command->description) + 1;
+        sent_message = malloc(needed);
+        snprintf(sent_message, needed, "%s : %s", command->command, command->description);
+        send(client->fd_id, sent_message, my_strlen(sent_message), 0);
+        free(sent_message);
+        return;
     }
     needed = snprintf(NULL, 0, "Unknown command %s", splitted_core_message[0]) + 1;
     sent_message = malloc(needed);
     snprintf(sent_message, needed, "Unknown command %s", splitted_core_message[0]);
     send_error(client, sent_message);
-    free(sent_message);
 }
 
 void direct_message(t_server *server, t_client *client, char **splitted_message)
@@ -326,4 +314,19 @@ void ping(t_server *server, t_client *client, char **splitted_message)
     (void)server;
     (void)splitted_message;
     send(client->fd_id, "Pong", 4, 0);
+}
+
+const t_server_command *get_command(char *command)
+{
+    int i;
+    const t_server_command *current_command;
+
+    i = 0;
+    while ((current_command = &(server_command_array[i]))->command != NULL)
+    {
+        if (my_strcmp(current_command->command, command) == 0)
+            return current_command;
+        i++;
+    }
+    return NULL;
 }
