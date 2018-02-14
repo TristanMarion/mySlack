@@ -135,9 +135,9 @@ void display_clients(t_server *server)
 {
     t_client *tmp;
 
-    my_putstr_color("blue", "\nNumber of connected users : ");
+    my_putstr_color("blue", "", "\nNumber of connected users : ", 0, 0);
     my_put_nbr(server->clients_list->nb_clients);
-    my_putstr_color("cyan", "\n\nList of connected users :");
+    my_putstr_color("cyan", "", "\n\nList of connected users :", 0, 0);
     tmp = server->clients_list->first_client;
     while (tmp != NULL)
     {
