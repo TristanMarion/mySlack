@@ -11,6 +11,7 @@ const t_server_command server_command_array[] = {
     {"leave", leave, "Leaves the current channel and gets back to the default channel"},
     {"create", create, "Create a channel"},
     {"ping", ping, "Pings the server"},
+    {"nickname", nickname, "Changes your nickname"},
     {NULL, NULL, NULL}};
 
 void manage_message(t_server *server, t_client *client, char *message)
@@ -310,6 +311,30 @@ void ping(t_server *server, t_client *client, char **splitted_message)
     (void)server;
     (void)splitted_message;
     send_special(client, my_strdup("info"), my_strdup("Pong !"));
+}
+
+void nickname(t_server *server, t_client *client, char **splitted_message)
+{
+    int needed;
+    char *sent_message;
+    char **splitted_core_message;
+
+    splitted_core_message = parse_command(splitted_message[1], ' ');
+    if (my_strcmp(splitted_core_message[0], "") == 0)
+    {
+        send_special(client, my_strdup("error"), my_strdup("Usage : /nickname <nickname>"));
+        return;
+    }
+    if (get_client(server, splitted_core_message[0]) != NULL)
+    {
+        send_special(client, my_strdup("error"), my_strdup("This nickname is already taken"));
+        return;
+    }
+    my_strcpy(client->nickname, splitted_core_message[0]);
+    needed = snprintf(NULL, 0, "You changed your nickname to %s", client->nickname) + 1;
+    sent_message = malloc(needed);
+    snprintf(sent_message, needed, "You changed your nickname to %s", client->nickname);
+    send_special(client, my_strdup("info"), sent_message);
 }
 
 const t_server_command *get_command(char *command)

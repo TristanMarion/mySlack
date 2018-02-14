@@ -26,5 +26,6 @@ void ping(t_server *server, t_client *client, char **splitted_message);
 void send_server_message(t_server *server, char *message);
 const t_server_command *get_command(char *command);
 void send_special(t_client *client, char *special, char *message);
+void nickname(t_server *server, t_client *client, char **splitted_message);
 
 #endif
