@@ -16,4 +16,5 @@ int main()
     }
 
     main_loop(server);
+    return (0);
 }
