@@ -52,3 +52,25 @@ There are multiple commands implemented on our chat system :
 - `/ping` answers the message `Pong` to the sender
 
 If a wrong command is sent, the server answers a help message to the user.
+
+## Docker
+
+Building the container :
+```bash
+$ docker build -t myslack .
+```
+
+Creating the network :
+```bash
+$ docker network create -d bridge myslack
+```
+
+Running the server :
+```bash
+$ docker run --rm -it -v "$PWD:/usr/src/app" -w /usr/src/app --name server --net myslack myslack
+```
+
+Running a client :
+```bash
+$ docker run --rm -it -v "$PWD:/usr/src/app" -w /usr/src/app --name client_1 --net myslack myslack
+```

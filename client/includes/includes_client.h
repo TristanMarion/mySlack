@@ -3,6 +3,7 @@
 
 #include <sys/socket.h>
 #include <sys/select.h>
+#include <netdb.h>
 #include <arpa/inet.h>
 #include <stdlib.h>
 #include <unistd.h>

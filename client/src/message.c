@@ -9,9 +9,9 @@ const t_display_function display_function_array[] = {
 
 void handle_message(int *end, char *message)
 {
-    (void)end;
     char **parsed_message;
     const t_display_function *function;
+    (void)end;
 
     parsed_message = parse_command(message, ';');
     if ((function = get_function(parsed_message[0])) != NULL)
@@ -38,13 +38,14 @@ void error(char *message, int *end)
 void disconnect(char *message, int *end)
 {
     *end = 1;
-    my_putstr_color("white", "red", parse_command(message, ';')[0], 1, 1, 0);
+    my_putstr_color("red", "", parse_command(message, ';')[0], 1, 1, 0);
+    my_putstr("\n");
 }
 
 void message(char *message, int *end)
 {
-    (void) end;
     char **parsed_message;
+    (void) end;
 
     parsed_message = parse_command(message, ';');
     my_putstr_color("", "", "[", 0, 0, 0);

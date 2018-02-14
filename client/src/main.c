@@ -1,31 +1,33 @@
 #include "includes_client.h"
 #include <string.h>
 
+int hostname_to_ip(char *hostname, char *ip);
+
 int main(int argc, char **argv)
 {
-    char message[MAX_LEN], server_reply[MAX_LEN];
+    char message[MAX_LEN], server_reply[MAX_LEN], ip[100];
     int end;
+    int sock;
+    struct sockaddr_in server;
+    fd_set fds;
 
     end = 0;
-
     if (argc < 4 || argc > 5)
     {
         put_info("Usage : ./client <serv_addr> <port> <nickname> [channel]\n");
         return (1);
     }
 
-    int sock;
-    struct sockaddr_in server;
-
     sock = socket(AF_INET, SOCK_STREAM, 0);
     if (sock == -1)
     {
         put_error("Could not create socket");
     }
-    server.sin_addr.s_addr = inet_addr(argv[1]);
+
+    hostname_to_ip(argv[1], ip);
+    server.sin_addr.s_addr = inet_addr(ip);
     server.sin_family = AF_INET;
     server.sin_port = htons(my_getnbr(argv[2]));
-
     if (connect(sock, (struct sockaddr *)&server, sizeof(server)) < 0)
     {
         put_error("connect failed. Error");
@@ -34,9 +36,6 @@ int main(int argc, char **argv)
 
     put_success("Connected\n");
     send_infos(sock, argv);
-
-    fd_set fds;
-
     while (end == 0)
     {
         FD_ZERO(&fds);
@@ -76,5 +75,19 @@ int main(int argc, char **argv)
         }
     }
 
+    return 0;
+}
+
+int hostname_to_ip(char *hostname, char *ip)
+{
+    struct hostent *he;
+
+    if ((he = gethostbyname(hostname)) == NULL)
+    {
+        put_error("gethostbyname");
+        return 1;
+    }
+
+    my_strcpy(ip, inet_ntoa(*(struct in_addr *)he->h_addr));
     return 0;
 }

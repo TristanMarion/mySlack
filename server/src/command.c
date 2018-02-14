@@ -84,13 +84,12 @@ void send_server_message(t_server *server, char *message)
 
 void list_commands(t_server *server, t_client *client, char **splitted_message)
 {
-    // silence unused variables warnings.
-    (void)server;
-    (void)splitted_message;
     int i;
     int len;
     t_server_command current_command;
-    char *all_commands = NULL;
+    char *all_commands;
+    (void)server;
+    (void)splitted_message;
 
     i = 0;
     all_commands = my_strdup("List of all server commands :\n");
@@ -111,11 +110,11 @@ void list_commands(t_server *server, t_client *client, char **splitted_message)
 
 void help(t_server *server, t_client *client, char **splitted_message)
 {
-    (void)server;
     const t_server_command *command;
     int needed;
     char *sent_message;
     char **splitted_core_message;
+    (void)server;
 
     splitted_core_message = parse_command(splitted_message[1], ' ');
     if (my_strcmp(splitted_core_message[0], "") == 0)
@@ -174,15 +173,13 @@ void send_direct_message(char *nickname, int target, char *message)
 
 void list_channels(t_server *server, t_client *client, char **splitted_message)
 {
-    (void)splitted_message;
     t_channel *current_channel;
     int len;
-    int i;
     char *all_channels;
+    (void)splitted_message;
 
     current_channel = server->serv_config->channels_list->first_channel;
     len = 0;
-    i = 0;
     all_channels = my_strdup("List of all server channels :\n");
     len = my_strlen(all_channels);
     while (current_channel != NULL)

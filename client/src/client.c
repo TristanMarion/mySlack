@@ -3,10 +3,11 @@
 void send_message(int fd, char *message)
 {
 	int needed;
+	char *command;
 	char *sent_message;
-	char *command = get_command(message);
+	
+	command = get_command(message);
 	message = get_core_message(message);
-
 	needed = snprintf(NULL, 0, "%s;%s", command, message) + 1;
 	sent_message = malloc(needed);
 	snprintf(sent_message, needed, "%s;%s", command, message);
@@ -31,11 +32,11 @@ char *get_core_message(char *message)
 	int i;
 	int j;
 	int k;
+	char *message_core;
 
 	i = 0;
 	j = 0;
 	k = 0;
-	char *message_core;
 	if (message[0] == '/')
 	{
 		while (message[++i] != ' ' && message[i] != '\0')
@@ -59,10 +60,10 @@ char *get_command(char *message)
 {
 	int i;
 	int j;
+	char *command;
 
 	i = 0;
 	j = 0;
-	char *command;
 	if (message[0] == '/')
 	{
 		while (message[++i] != ' ' && message[i] != '\0')
