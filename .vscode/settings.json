@@ -15,7 +15,8 @@
         "includes_common.h": "c",
         "channel.h": "c",
         "string.h": "c",
-        "display.h": "c"
+        "display.h": "c",
+        "message.h": "c"
     },
     "c-cpp-flylint.clang.warnings": [
         "all",

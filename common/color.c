@@ -14,7 +14,7 @@ static const t_color g_color[] = {{"clear", "\033[H\033[2J", ""},
                                   {"white", "37", "47"},
                                   {NULL, NULL, NULL}};
 
-void my_putstr_color(char *color, char *bg_color, char *str, int bold, int underline)
+void my_putstr_color(char *color, char *bg_color, char *str, int bold, int underline, int italic)
 {
     int i;
     int j;
@@ -24,8 +24,7 @@ void my_putstr_color(char *color, char *bg_color, char *str, int bold, int under
     increment(&i, color);
     increment(&j, bg_color);
     my_putstr("\033[");
-    print_bold(bold);
-    print_underline(underline);
+    print_special(bold, underline, italic);
     if (g_color[j].color != NULL)
     {
         my_putstr(g_color[j].bg_unicode);
@@ -40,16 +39,14 @@ void my_putstr_color(char *color, char *bg_color, char *str, int bold, int under
     my_putstr(reset_color);
 }
 
-void print_bold(int bold)
+void print_special(int bold, int underline, int italic)
 {
     if (bold)
         my_putstr("1;");
-}
-
-void print_underline(int underline)
-{
     if (underline)
         my_putstr("4;");
+    if (italic)
+        my_putstr("3;");
 }
 
 void increment(int *i, char *color)
