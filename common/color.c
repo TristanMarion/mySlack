@@ -3,37 +3,58 @@
 
 const char *reset_color = "\033[0m";
 
-typedef struct s_color t_color;
+static const t_color g_color[] = {{"clear", "\033[H\033[2J", ""},
+                                  {"black", "30", "40"},
+                                  {"red", "31", "41"},
+                                  {"green", "32", "42"},
+                                  {"yellow", "33", "43"},
+                                  {"blue", "34", "44"},
+                                  {"magenta", "35", "45"},
+                                  {"cyan", "36", "46"},
+                                  {"white", "37", "47"},
+                                  {NULL, NULL, NULL}};
 
-struct s_color
-{
-    char *color;
-    char *unicode;
-};
-
-static const t_color g_color[] = {{"clear", "\033[H\033[2J"},
-                                  {"red", "\033[31m"},
-                                  {"green", "\033[32m"},
-                                  {"yellow", "\033[33m"},
-                                  {"blue", "\033[34m"},
-                                  {"magenta", "\033[35m"},
-                                  {"cyan", "\033[36m"},
-                                  {NULL, NULL}};
-
-void my_putstr_color(const char *color, const char *str)
+void my_putstr_color(char *color, char *bg_color, char *str, int bold, int underline)
 {
     int i;
+    int j;
 
     i = 0;
-    while (g_color[i].color != NULL &&
-           (my_strcmp(g_color[i].color, color) != 0))
-        i++;
-    if (g_color[i].color == NULL)
+    j = 0;
+    increment(&i, color);
+    increment(&j, bg_color);
+    my_putstr("\033[");
+    print_bold(bold);
+    print_underline(underline);
+    if (g_color[j].color != NULL)
     {
-        my_putstr(str);
-        return;
+        my_putstr(g_color[j].bg_unicode);
+        my_putstr(";");
     }
-    my_putstr(g_color[i].unicode);
+    if (g_color[i].color == NULL)
+        my_putstr(g_color[8].fg_unicode);
+    else
+        my_putstr(g_color[i].fg_unicode);
+    my_putstr("m");
     my_putstr(str);
     my_putstr(reset_color);
+}
+
+void print_bold(int bold)
+{
+    if (bold)
+        my_putstr("1;");
+}
+
+void print_underline(int underline)
+{
+    if (underline)
+        my_putstr("4;");
+}
+
+void increment(int *i, char *color)
+{
+    while (g_color[*i].color != NULL &&
+           (my_strcmp(g_color[*i].color, color) != 0))
+        (*i)++;
 }
