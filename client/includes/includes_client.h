@@ -11,6 +11,7 @@
 #include "libmy.h"
 #include "display.h"
 #include "client.h"
+#include "message.h"
 
 #define MAX_LEN 1024
 

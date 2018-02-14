@@ -26,14 +26,21 @@ void manage_message(t_server *server, t_client *client, char *message)
         return;
     }
     response = my_strdup("Unknown command. Type /list_commands to show available commands.");
-    send(client->fd_id, response, my_strlen(response), 0);
-    free(response);
+    send_special(client, my_strdup("error"), response);
 }
 
-void send_error(t_client *client, char *error_message)
+void send_special(t_client *client, char *special, char *message)
 {
-    send(client->fd_id, error_message, my_strlen(error_message), 0);
-    free(error_message);
+    int needed;
+    char *sent_message;
+
+    needed = snprintf(NULL, 0, "%s;%s", special, message) + 1;
+    sent_message = malloc(needed);
+    snprintf(sent_message, needed, "%s;%s", special, message);
+    send(client->fd_id, sent_message, my_strlen(sent_message), 0);
+    free(special);
+    free(message);
+    free(sent_message);
 }
 
 void send_message(t_server *server, t_client *client, char **splitted_message)
@@ -43,9 +50,9 @@ void send_message(t_server *server, t_client *client, char **splitted_message)
     char *message;
 
     current_client = server->clients_list->first_client;
-    needed = snprintf(NULL, 0, "[%s] %s : %s", client->current_channel->name, client->nickname, splitted_message[1]) + 1;
+    needed = snprintf(NULL, 0, "message;[%s] %s : %s", client->current_channel->name, client->nickname, splitted_message[1]) + 1;
     message = malloc(needed);
-    snprintf(message, needed, "[%s] %s : %s", client->current_channel->name, client->nickname, splitted_message[1]);
+    snprintf(message, needed, "message;[%s] %s : %s", client->current_channel->name, client->nickname, splitted_message[1]);
     while (current_client != NULL)
     {
         if (current_client->fd_id != client->fd_id && my_strcmp(current_client->current_channel->name, client->current_channel->name) == 0)
@@ -64,9 +71,9 @@ void send_server_message(t_server *server, char *message)
     char *sent_message;
 
     current_client = server->clients_list->first_client;
-    needed = snprintf(NULL, 0, "[SERVER] %s", message) + 1;
+    needed = snprintf(NULL, 0, "message;[SERVER] %s", message) + 1;
     sent_message = malloc(needed);
-    snprintf(sent_message, needed, "[SERVER] %s", message);
+    snprintf(sent_message, needed, "message;[SERVER] %s", message);
     while (current_client != NULL)
     {
         send(current_client->fd_id, sent_message, my_strlen(sent_message), 0);
@@ -86,8 +93,8 @@ void list_commands(t_server *server, t_client *client, char **splitted_message)
     char *all_commands = NULL;
 
     i = 0;
-    len = my_strlen("List of all server commands :\n");
     all_commands = my_strdup("List of all server commands :\n");
+    len = my_strlen(all_commands);
     while ((current_command = server_command_array[i]).command != NULL)
     {
         len += my_strlen(current_command.command) + my_strlen(current_command.description) + 8;
@@ -99,8 +106,7 @@ void list_commands(t_server *server, t_client *client, char **splitted_message)
         my_strcat(all_commands, "\n");
         i++;
     }
-    send(client->fd_id, all_commands, my_strlen(all_commands), 0);
-    free(all_commands);
+    send_special(client, my_strdup("info"), all_commands);
 }
 
 void help(t_server *server, t_client *client, char **splitted_message)
@@ -114,7 +120,7 @@ void help(t_server *server, t_client *client, char **splitted_message)
     splitted_core_message = parse_command(splitted_message[1], ' ');
     if (my_strcmp(splitted_core_message[0], "") == 0)
     {
-        send_error(client, my_strdup("Usage: /help <command>, available commands : /list_commands"));
+        send_special(client, my_strdup("error"), my_strdup("Usage: /help <command>, available commands : /list_commands"));
         return;
     }
     if ((command = get_command(splitted_core_message[0])) != NULL)
@@ -122,14 +128,13 @@ void help(t_server *server, t_client *client, char **splitted_message)
         needed = snprintf(NULL, 0, "%s : %s", command->command, command->description) + 1;
         sent_message = malloc(needed);
         snprintf(sent_message, needed, "%s : %s", command->command, command->description);
-        send(client->fd_id, sent_message, my_strlen(sent_message), 0);
-        free(sent_message);
+        send_special(client, my_strdup("info"), sent_message);
         return;
     }
     needed = snprintf(NULL, 0, "Unknown command %s", splitted_core_message[0]) + 1;
     sent_message = malloc(needed);
     snprintf(sent_message, needed, "Unknown command %s", splitted_core_message[0]);
-    send_error(client, sent_message);
+    send_special(client, my_strdup("error"), sent_message);
 }
 
 void direct_message(t_server *server, t_client *client, char **splitted_message)
@@ -140,18 +145,18 @@ void direct_message(t_server *server, t_client *client, char **splitted_message)
     splitted_core_message = parse_command(splitted_message[1], ' ');
     if (splitted_core_message[0] == NULL || splitted_core_message[1] == NULL)
     {
-        send_error(client, my_strdup("Usage : /direct_message <nickname> <message>"));
+        send_special(client, my_strdup("error"), my_strdup("Usage : /direct_message <nickname> <message>"));
         return;
     }
     if (my_strcmp(client->nickname, splitted_core_message[0]) == 0)
     {
-        send_error(client, my_strdup("WHAT THE FUCK ARE YOU DOING"));
+        send_special(client, my_strdup("error"), my_strdup("WHAT THE FUCK ARE YOU DOING"));
         return;
     }
     if ((target_client = get_client(server, splitted_core_message[0])) != NULL)
         send_direct_message(client->nickname, target_client->fd_id, my_implode(splitted_core_message, " ", 1));
     else
-        send_error(client, my_strdup("User not found"));
+        send_special(client, my_strdup("error"), my_strdup("User not found"));
     return;
 }
 
@@ -160,9 +165,9 @@ void send_direct_message(char *nickname, int target, char *message)
     int needed;
     char *sent_message;
 
-    needed = snprintf(NULL, 0, "/!\\ DM - %s : %s", nickname, message) + 1;
+    needed = snprintf(NULL, 0, "message;/!\\ DM - %s : %s", nickname, message) + 1;
     sent_message = malloc(needed);
-    snprintf(sent_message, needed, "/!\\ DM - %s : %s", nickname, message);
+    snprintf(sent_message, needed, "message;/!\\ DM - %s : %s", nickname, message);
     send(target, sent_message, my_strlen(sent_message), 0);
     free(sent_message);
 }
@@ -178,24 +183,24 @@ void list_channels(t_server *server, t_client *client, char **splitted_message)
     current_channel = server->serv_config->channels_list->first_channel;
     len = 0;
     i = 0;
-    all_channels = NULL;
+    all_channels = my_strdup("List of all server channels :\n");
+    len = my_strlen(all_channels);
     while (current_channel != NULL)
     {
-        len += my_strlen(current_channel->name) + 5;
+        len += my_strlen(current_channel->name) + 4;
         all_channels = realloc(all_channels, len);
-        my_strcat(all_channels, "\t- ");
-        my_strcat(all_channels, current_channel->name);
         if (my_strcmp(current_channel->name, client->current_channel->name) == 0)
         {
-            len += 5;
+            len += 6;
             all_channels = realloc(all_channels, len);
-            my_strcat(all_channels, " <---");
+            my_strcat(all_channels, "--->");
         }
+        my_strcat(all_channels, "\t- ");
+        my_strcat(all_channels, current_channel->name);
         my_strcat(all_channels, "\n");
         current_channel = current_channel->next;
     }
-    send(client->fd_id, all_channels, my_strlen(all_channels), 0);
-    free(all_channels);
+    send_special(client, my_strdup("info"), all_channels);
 }
 
 void join(t_server *server, t_client *client, char **splitted_message)
@@ -208,7 +213,7 @@ void join(t_server *server, t_client *client, char **splitted_message)
     splitted_core_message = parse_command(splitted_message[1], ' ');
     if (my_strcmp(splitted_core_message[0], "") == 0)
     {
-        send_error(client, my_strdup("Usage : /join <channel>"));
+        send_special(client, my_strdup("error"), my_strdup("Usage : /join <channel>"));
         return;
     }
     if (my_strcmp(client->current_channel->name, splitted_core_message[0]) == 0)
@@ -219,17 +224,16 @@ void join(t_server *server, t_client *client, char **splitted_message)
         if (my_strcmp(splitted_core_message[0], current_channel->name) == 0)
         {
             client->current_channel = get_channel(server, my_strdup(splitted_core_message[0]));
-            needed = snprintf(NULL, 0, "You enter %s\n", client->current_channel->name) + 1;
+            needed = snprintf(NULL, 0, "You enter %s", client->current_channel->name) + 1;
             sent_message = malloc(needed);
-            snprintf(sent_message, needed, "You enter %s\n", client->current_channel->name);
-            send(client->fd_id, sent_message, my_strlen(sent_message), 0);
+            snprintf(sent_message, needed, "You enter %s", client->current_channel->name);
+            send_special(client, my_strdup("info"), sent_message);
             notify_channel(server, client, my_strdup("joined"));
-            free(sent_message);
             return;
         }
         current_channel = current_channel->next;
     }
-    send_error(client, my_strdup("Channel not found"));
+    send_special(client, my_strdup("error"), my_strdup("Channel not found"));
 }
 
 void notify_channel(t_server *server, t_client *client, char *action)
@@ -238,16 +242,14 @@ void notify_channel(t_server *server, t_client *client, char *action)
     t_client *current_client;
     size_t needed;
 
-    needed = snprintf(NULL, 0, "%s %s this channel !\n", client->nickname, action) + 1;
+    needed = snprintf(NULL, 0, "info;%s %s this channel !", client->nickname, action) + 1;
     message = malloc(needed);
-    snprintf(message, needed, "%s %s this channel !\n", client->nickname, action);
+    snprintf(message, needed, "info;%s %s this channel !", client->nickname, action);
     current_client = server->clients_list->first_client;
     while (current_client != NULL)
     {
         if (my_strcmp(current_client->current_channel->name, client->current_channel->name) == 0 && current_client->fd_id != client->fd_id)
-        {
             send(current_client->fd_id, message, my_strlen(message), 0);
-        }
         current_client = current_client->next;
     }
     free(message);
@@ -261,11 +263,10 @@ void leave(t_server *server, t_client *client, char **splitted_message)
     (void)splitted_message;
     notify_channel(server, client, my_strdup("left"));
     client->current_channel = get_channel(server, my_strdup(server->serv_config->channels_list->first_channel->name));
-    needed = snprintf(NULL, 0, "You are back in %s\n", client->current_channel->name) + 1;
+    needed = snprintf(NULL, 0, "You are back in %s", client->current_channel->name) + 1;
     sent_message = malloc(needed);
-    snprintf(sent_message, needed, "You are back in %s\n", client->current_channel->name);
-    send(client->fd_id, sent_message, my_strlen(sent_message), 0);
-    free(sent_message);
+    snprintf(sent_message, needed, "You are back in %s", client->current_channel->name);
+    send_special(client, my_strdup("info"), sent_message);
 }
 
 void create(t_server *server, t_client *client, char **splitted_message)
@@ -277,21 +278,20 @@ void create(t_server *server, t_client *client, char **splitted_message)
     splitted_core_message = parse_command(splitted_message[1], ' ');
     if (my_strcmp(splitted_core_message[0], "") == 0)
     {
-        send_error(client, my_strdup("Usage : /create <channel>"));
+        send_special(client, my_strdup("error"), my_strdup("Usage : /create <channel>"));
         return;
     }
     if (!check_channel_availability(server, splitted_core_message[0]))
     {
-        send_error(client, my_strdup("This channel already exists"));
+        send_special(client, my_strdup("error"), my_strdup("This channel already exists"));
         return;
     }
     add_channel(server->serv_config->channels_list, my_strdup(splitted_core_message[0]));
     client->current_channel = get_channel(server, my_strdup(splitted_core_message[0]));
-    needed = snprintf(NULL, 0, "You create and join %s\n", client->current_channel->name) + 1;
+    needed = snprintf(NULL, 0, "You create and join %s", client->current_channel->name) + 1;
     sent_message = malloc(needed);
-    snprintf(sent_message, needed, "You create and join %s\n", client->current_channel->name);
-    send(client->fd_id, sent_message, my_strlen(sent_message), 0);
-    free(sent_message);
+    snprintf(sent_message, needed, "You create and join %s", client->current_channel->name);
+    send_special(client, my_strdup("info"), sent_message);
 }
 
 int check_channel_availability(t_server *server, char *name)
@@ -312,7 +312,7 @@ void ping(t_server *server, t_client *client, char **splitted_message)
 {
     (void)server;
     (void)splitted_message;
-    send(client->fd_id, "Pong", 4, 0);
+    send_special(client, my_strdup("info"), my_strdup("Pong !"));
 }
 
 const t_server_command *get_command(char *command)

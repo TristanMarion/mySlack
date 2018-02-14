@@ -60,7 +60,7 @@ int new_client(t_server *server)
         if (server->serv_config->max_clients <= server->clients_list->nb_clients)
         {
             error_message = my_strdup("Sorry the server is full. Please log out and try again.");
-            send(client->fd_id, error_message, my_strlen(error_message), 0);
+            send_special(client, my_strdup("disconnect"), error_message);
             return 0;
         }
         if (!check_nickname(server, client))
@@ -90,8 +90,7 @@ int check_nickname(t_server *server, t_client *client)
     error_message = my_strdup("Sorry, this username is already used. Please log out and try another one.");
     same_nickname_client = get_client(server, client->nickname);
     if (same_nickname_client != NULL)
-        send(client->fd_id, error_message, my_strlen(error_message), 0);
-    free(error_message);
+        send_special(client, my_strdup("disconnect"), error_message);
     return (same_nickname_client == NULL);
 }
 
@@ -154,13 +153,10 @@ void welcome_message(t_server *server, t_client *client)
     char *message;
     int needed;
 
-    message = NULL;
     needed = snprintf(NULL, 0, server->serv_config->welcome_message, client->nickname) + 1;
     message = malloc(needed);
     snprintf(message, needed, server->serv_config->welcome_message, client->nickname);
-    send(client->fd_id, message, my_strlen(message), 0);
-    free(message);
-
+    send_special(client, my_strdup("info"), message);
     needed = snprintf(NULL, 0, "%s joined the server with FD %d !\n", client->nickname, client->fd_id) + 1;
     message = malloc(needed);
     snprintf(message, needed, "%s joined the server with FD %d !\n", client->nickname, client->fd_id);
@@ -174,9 +170,9 @@ void notify_new_client(t_server *server, t_client *client)
     t_client *tmp;
     size_t needed;
 
-    needed = snprintf(NULL, 0, "%s joined the server !\n", client->nickname) + 1;
+    needed = snprintf(NULL, 0, "info;%s joined the server !\n", client->nickname) + 1;
     message = malloc(needed);
-    snprintf(message, needed, "%s joined the server !\n", client->nickname);
+    snprintf(message, needed, "info;%s joined the server !\n", client->nickname);
     tmp = server->clients_list->first_client;
     while (tmp != NULL)
     {
@@ -228,9 +224,9 @@ void disconnect(t_server *server, t_client *client)
     char *message;
     t_client *current_client;
 
-    needed = snprintf(NULL, 0, "%s left the server !\n", client->nickname) + 1;
+    needed = snprintf(NULL, 0, "info;%s left the server !\n", client->nickname) + 1;
     message = malloc(needed);
-    snprintf(message, needed, "%s left the server !\n", client->nickname);
+    snprintf(message, needed, "info;%s left the server !\n", client->nickname);
     put_info(message);
     remove_client_from_list(server, client);
     current_client = server->clients_list->first_client;

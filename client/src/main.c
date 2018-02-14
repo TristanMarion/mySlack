@@ -4,6 +4,10 @@
 int main(int argc, char **argv)
 {
     char message[MAX_LEN], server_reply[MAX_LEN];
+    int end;
+
+    end = 0;
+
     if (argc < 4 || argc > 5)
     {
         put_info("Usage : ./client <serv_addr> <port> <nickname> [channel]\n");
@@ -33,7 +37,7 @@ int main(int argc, char **argv)
 
     fd_set fds;
 
-    while (1)
+    while (end == 0)
     {
         FD_ZERO(&fds);
         FD_SET(0, &fds);
@@ -66,7 +70,7 @@ int main(int argc, char **argv)
         {
             if (recv(sock, server_reply, MAX_LEN - 1, 0) > 0)
             {
-                put_info(server_reply);
+                handle_message(&end, server_reply);
                 my_reset(server_reply, MAX_LEN);
             }
         }
