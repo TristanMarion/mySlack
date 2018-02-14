@@ -50,9 +50,9 @@ void send_message(t_server *server, t_client *client, char **splitted_message)
     char *message;
 
     current_client = server->clients_list->first_client;
-    needed = snprintf(NULL, 0, "message;[%s] %s : %s", client->current_channel->name, client->nickname, splitted_message[1]) + 1;
+    needed = snprintf(NULL, 0, "message;%s;%s;%s", client->current_channel->name, client->nickname, splitted_message[1]) + 1;
     message = malloc(needed);
-    snprintf(message, needed, "message;[%s] %s : %s", client->current_channel->name, client->nickname, splitted_message[1]);
+    snprintf(message, needed, "message;%s;%s;%s", client->current_channel->name, client->nickname, splitted_message[1]);
     while (current_client != NULL)
     {
         if (current_client->fd_id != client->fd_id && my_strcmp(current_client->current_channel->name, client->current_channel->name) == 0)
@@ -71,9 +71,9 @@ void send_server_message(t_server *server, char *message)
     char *sent_message;
 
     current_client = server->clients_list->first_client;
-    needed = snprintf(NULL, 0, "message;[SERVER] %s", message) + 1;
+    needed = snprintf(NULL, 0, "server;%s", message) + 1;
     sent_message = malloc(needed);
-    snprintf(sent_message, needed, "message;[SERVER] %s", message);
+    snprintf(sent_message, needed, "server;%s", message);
     while (current_client != NULL)
     {
         send(current_client->fd_id, sent_message, my_strlen(sent_message), 0);

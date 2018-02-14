@@ -10,9 +10,8 @@ struct s_color
     char *bg_unicode;
 };
 
-void my_putstr_color(char *color, char *bg_color, char *str, int bold, int underline);
-void print_bold(int bold);
-void print_underline(int underline);
+void my_putstr_color(char *color, char *bg_color, char *str, int bold, int underline, int italic);
+void print_special(int bold, int underline, int italic);
 void increment(int *i, char *color);
 
 #endif
