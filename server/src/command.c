@@ -331,9 +331,14 @@ void nickname(t_server *server, t_client *client, char **splitted_message)
 
 void important(t_server *server, t_client *client, char **splitted_message)
 {
-    t_client *current_client;
     char *message;
+    t_client *current_client;
 
+    if (my_strlen(splitted_message[1]) == 0)
+    {
+        send_special(client, my_strdup("error"), my_strdup("Usage : /important <message>"));
+        return;
+    }
     current_client = server->clients_list->first_client;
     message = generate_message(my_strdup("important;%s;%s"), 1, client->nickname, splitted_message[1]);
     while (current_client != NULL)
