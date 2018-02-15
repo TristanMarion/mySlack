@@ -321,6 +321,11 @@ void ping(t_server *server, t_client *client, char **splitted_message)
         send_special(client, my_strdup("info"), my_strdup("Pong !"));
         return;
     }
+    if (my_strcmp(splitted_core_message[0], client->nickname) == 0)
+    {
+        send_special(client, my_strdup("info"), my_strdup("Did you understand the purpose of this command ? 🤔"));
+        return;
+    }
     if ((target = get_client(server, splitted_core_message[0])) != NULL)
     {
         needed = snprintf(NULL, 0, "%s pinged you !", client->nickname) + 1;
@@ -329,8 +334,8 @@ void ping(t_server *server, t_client *client, char **splitted_message)
         send_special(target, my_strdup("info"), sent_message);
         return;
     }
-        sent_message = my_strdup("Your ping didn't find its target and is now lost in space and time :(");
-        send_special(client, my_strdup("info"), sent_message);
+    sent_message = my_strdup("Your ping didn't find its target and is now lost in space and time :(");
+    send_special(client, my_strdup("info"), sent_message);
 }
 
 void nickname(t_server *server, t_client *client, char **splitted_message)
