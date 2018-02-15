@@ -280,12 +280,11 @@ int check_channel_availability(t_server *server, char *name)
 
 void ping(t_server *server, t_client *client, char **splitted_message)
 {
-    (void)server;
-
     char **splitted_core_message;
     t_client *target;
     int needed;
     char *sent_message;
+    (void)server;
 
     splitted_core_message = parse_command(splitted_message[1], ' ');
     if (my_strcmp(splitted_core_message[0], "") == 0)
