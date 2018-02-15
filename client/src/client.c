@@ -19,7 +19,7 @@ void my_send(int fd, char *first_str, char *second_str)
 {
 	char *sent_message;
 
-	sent_message = generate_message(my_strdup("%s;%s"), first_str, second_str);
+	sent_message = generate_message(my_strdup("%s;%s"), 1, first_str, second_str);
 	send(fd, sent_message, my_strlen(sent_message), 0);
 	free(sent_message);
 }
