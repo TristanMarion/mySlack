@@ -13,6 +13,7 @@ const t_server_command server_command_array[] = {
     {"ping", ping, "Pings the server"},
     {"nickname", nickname, "Changes your nickname"},
     {"important", important, "Sends a message to every connected user"},
+    {"color", color, "Changes your messages' color"},
     {NULL, NULL, NULL}};
 
 void manage_message(t_server *server, t_client *client, char *message)
@@ -48,7 +49,7 @@ void send_message(t_server *server, t_client *client, char **splitted_message)
     char *message;
 
     current_client = server->clients_list->first_client;
-    message = generate_message(my_strdup("message;%s;%s;%s"), 1, client->current_channel->name, client->nickname, splitted_message[1]);
+    message = generate_message(my_strdup("message;%s;%s;%s;%s"), 1, client->color, client->current_channel->name, client->nickname, splitted_message[1]);
     while (current_client != NULL)
     {
         if (current_client->fd_id != client->fd_id && my_strcmp(current_client->current_channel->name, client->current_channel->name) == 0)
@@ -350,6 +351,29 @@ void important(t_server *server, t_client *client, char **splitted_message)
     free(message);
 }
 
+void color(t_server *server, t_client *client, char **splitted_message)
+{
+    char *sent_message;
+    char **splitted_core_message;
+    (void)server;
+
+    splitted_core_message = parse_command(splitted_message[1], ' ');
+    if (my_strcmp(splitted_core_message[0], "") == 0)
+    {
+        send_special(client, my_strdup("error"), my_strdup("Usage : /color <color>"));
+        return;
+    }
+    if (get_color(splitted_core_message[0]).color == NULL)
+    {
+        send_special(client, my_strdup("error"), my_strdup("This color doest'n exists. To check colors list use `/list_colors`"));
+        return;
+    }
+    free(client->color);
+    client->color = my_strdup(splitted_core_message[0]);
+    sent_message = generate_message(my_strdup("You changed your messgages' color to %s"), 1, client->color);
+    send_special(client, my_strdup("info"), sent_message);
+}
+
 const t_server_command *get_command(char *command)
 {
     int i;
@@ -363,4 +387,19 @@ const t_server_command *get_command(char *command)
         i++;
     }
     return NULL;
+}
+
+t_color get_color(char *color)
+{
+    int i;
+    t_color current_color;
+
+    i = 0;
+    while ((current_color = g_color[i]).color != NULL)
+    {
+        if (my_strcmp(current_color.color, color) == 0)
+            return current_color;
+        i++;
+    }
+    return g_color[i];
 }

@@ -66,11 +66,11 @@ void message(char *message, int *end)
 
     parsed_message = parse_command(message, ';');
     my_putstr_color("", "", "[", 0, 0, 0);
-    my_putstr_color("", "", parsed_message[0], 0, 0, 0);
-    my_putstr_color("", "", "] ", 0, 0, 0);
     my_putstr_color("", "", parsed_message[1], 0, 0, 0);
-    my_putstr_color("", "", " : ", 0, 0, 0);
+    my_putstr_color("", "", "] ", 0, 0, 0);
     my_putstr_color("", "", parsed_message[2], 0, 0, 0);
+    my_putstr_color("", "", " : ", 0, 0, 0);
+    my_putstr_color(parsed_message[0], "", parsed_message[3], 0, 0, 0);
     my_putstr("\n");
 }
 

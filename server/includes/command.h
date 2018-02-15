@@ -28,5 +28,7 @@ const t_server_command *get_command(char *command);
 void send_special(t_client *client, char *special, char *message);
 void nickname(t_server *server, t_client *client, char **splitted_message);
 void important(t_server *server, t_client *client, char **splitted_message);
+void color(t_server *server, t_client *client, char **splitted_message);
+t_color get_color(char *color);
 
 #endif
