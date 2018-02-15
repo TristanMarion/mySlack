@@ -6,6 +6,7 @@ const t_display_function display_function_array[] = {
     {"disconnect", disconnect},
     {"message", message},
     {"direct_message", direct_message},
+    {"important", important},
     {NULL, NULL}};
 
 void handle_message(int *end, char *message)
@@ -40,6 +41,21 @@ void disconnect(char *message, int *end)
 {
     *end = 1;
     my_putstr_color("red", "", parse_command(message, ';')[0], 1, 1, 0);
+    my_putstr("\n");
+}
+
+void important(char *message, int *end)
+{
+    char **parsed_message;
+    (void)end;
+
+    parsed_message = parse_command(message, ';');    
+    my_putstr("[");
+    my_putstr_color("red", "", "IMPORTANT", 1, 0, 0);
+    my_putstr("] ");
+    my_putstr(parsed_message[0]);
+    my_putstr(" - ");
+    my_putstr(parsed_message[1]);
     my_putstr("\n");
 }
 

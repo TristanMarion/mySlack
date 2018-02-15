@@ -12,6 +12,7 @@ const t_server_command server_command_array[] = {
     {"create", create, "Create a channel"},
     {"ping", ping, "Pings the server"},
     {"nickname", nickname, "Changes your nickname"},
+    {"important", important, "Sends a message to every connected user"},
     {NULL, NULL, NULL}};
 
 void manage_message(t_server *server, t_client *client, char *message)
@@ -51,9 +52,7 @@ void send_message(t_server *server, t_client *client, char **splitted_message)
     while (current_client != NULL)
     {
         if (current_client->fd_id != client->fd_id && my_strcmp(current_client->current_channel->name, client->current_channel->name) == 0)
-        {
             send(current_client->fd_id, message, my_strlen(message), 0);
-        }
         current_client = current_client->next;
     }
     free(message);
@@ -328,6 +327,27 @@ void nickname(t_server *server, t_client *client, char **splitted_message)
     my_strcpy(client->nickname, splitted_core_message[0]);
     sent_message = generate_message(my_strdup("You changed your nickname to %s"), 1, client->nickname);
     send_special(client, my_strdup("info"), sent_message);
+}
+
+void important(t_server *server, t_client *client, char **splitted_message)
+{
+    char *message;
+    t_client *current_client;
+
+    if (my_strlen(splitted_message[1]) == 0)
+    {
+        send_special(client, my_strdup("error"), my_strdup("Usage : /important <message>"));
+        return;
+    }
+    current_client = server->clients_list->first_client;
+    message = generate_message(my_strdup("important;%s;%s"), 1, client->nickname, splitted_message[1]);
+    while (current_client != NULL)
+    {
+        if (current_client->fd_id != client->fd_id)
+            send(current_client->fd_id, message, my_strlen(message), 0);
+        current_client = current_client->next;
+    }
+    free(message);
 }
 
 const t_server_command *get_command(char *command)
