@@ -165,9 +165,9 @@ void send_direct_message(char *nickname, int target, char *message)
     int needed;
     char *sent_message;
 
-    needed = snprintf(NULL, 0, "message;/!\\ DM - %s : %s", nickname, message) + 1;
+    needed = snprintf(NULL, 0, "direct_message;%s;%s", nickname, message) + 1;
     sent_message = malloc(needed);
-    snprintf(sent_message, needed, "message;/!\\ DM - %s : %s", nickname, message);
+    snprintf(sent_message, needed, "direct_message;%s;%s", nickname, message);
     send(target, sent_message, my_strlen(sent_message), 0);
     free(sent_message);
 }
