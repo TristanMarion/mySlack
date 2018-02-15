@@ -370,7 +370,7 @@ void color(t_server *server, t_client *client, char **splitted_message)
     }
     free(client->color);
     client->color = my_strdup(splitted_core_message[0]);
-    sent_message = generate_message(my_strdup("You changed your messgages' color to %s"), 1, client->color);
+    sent_message = generate_message(my_strdup("You changed your messages' color to %s"), 1, client->color);
     send_special(client, my_strdup("info"), sent_message);
 }
 
