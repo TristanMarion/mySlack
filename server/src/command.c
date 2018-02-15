@@ -14,6 +14,7 @@ const t_server_command server_command_array[] = {
     {"nickname", nickname, "Changes your nickname"},
     {"important", important, "Sends a message to every connected user"},
     {"color", color, "Changes your messages' color"},
+    {"bg_color", bg_color, "Changes your messages' background color"},
     {NULL, NULL, NULL}};
 
 void manage_message(t_server *server, t_client *client, char *message)
@@ -49,7 +50,7 @@ void send_message(t_server *server, t_client *client, char **splitted_message)
     char *message;
 
     current_client = server->clients_list->first_client;
-    message = generate_message(my_strdup("message;%s;%s;%s;%s"), 1, client->color, client->current_channel->name, client->nickname, splitted_message[1]);
+    message = generate_message(my_strdup("message;%s;%s;%s;%s;%s"), 1, client->color, client->bg_color, client->current_channel->name, client->nickname, splitted_message[1]);
     while (current_client != NULL)
     {
         if (current_client->fd_id != client->fd_id && my_strcmp(current_client->current_channel->name, client->current_channel->name) == 0)
@@ -353,14 +354,29 @@ void important(t_server *server, t_client *client, char **splitted_message)
 
 void color(t_server *server, t_client *client, char **splitted_message)
 {
-    char *sent_message;
-    char **splitted_core_message;
     (void)server;
 
-    splitted_core_message = parse_command(splitted_message[1], ' ');
+    change_color(client, splitted_message[0], splitted_message[1]);
+}
+
+void bg_color(t_server *server, t_client *client, char **splitted_message)
+{
+    (void)server;
+
+    change_color(client, splitted_message[0], splitted_message[1]);
+}
+
+void change_color(t_client *client, char *mode, char *message)
+{
+    char **splitted_core_message;
+    char *sent_message;
+    char *to_change;
+    
+    splitted_core_message = parse_command(message, ' ');
     if (my_strcmp(splitted_core_message[0], "") == 0)
     {
-        send_special(client, my_strdup("error"), my_strdup("Usage : /color <color>"));
+        sent_message = generate_message(my_strdup("Usage : /%s <color>"), 1, mode);
+        send_special(client, my_strdup("error"), sent_message);
         return;
     }
     if (get_color(splitted_core_message[0]).color == NULL)
@@ -368,9 +384,10 @@ void color(t_server *server, t_client *client, char **splitted_message)
         send_special(client, my_strdup("error"), my_strdup("This color doest'n exists. To check colors list use `/list_colors`"));
         return;
     }
-    free(client->color);
-    client->color = my_strdup(splitted_core_message[0]);
-    sent_message = generate_message(my_strdup("You changed your messages' color to %s"), 1, client->color);
+    to_change = my_strcmp(mode, "color") == 0 ? client->color : client->bg_color;
+    free(to_change);
+    to_change = my_strdup(splitted_core_message[0]);
+    sent_message = generate_message(my_strdup("You changed your messages' %s to %s"), 1, mode, to_change);
     send_special(client, my_strdup("info"), sent_message);
 }
 

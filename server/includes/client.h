@@ -12,6 +12,7 @@ typedef struct s_client
     struct s_client 			*next;
     char                        nickname[NICKNAME_MAX_LEN];
     char                        *color;
+    char                        *bg_color;
     struct s_channel 			*current_channel;
 } t_client;
 
