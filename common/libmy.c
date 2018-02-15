@@ -1,5 +1,4 @@
-#include <stdlib.h>
-#include <unistd.h>
+#include "includes_common.h"
 
 void my_putchar(const char c)
 {
