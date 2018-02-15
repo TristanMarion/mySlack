@@ -2,29 +2,26 @@
 
 void send_message(int fd, char *message)
 {
-	int needed;
 	char *command;
-	char *sent_message;
+	char *core_message;
 	
 	command = get_command(message);
-	message = get_core_message(message);
-	needed = snprintf(NULL, 0, "%s;%s", command, message) + 1;
-	sent_message = malloc(needed);
-	snprintf(sent_message, needed, "%s;%s", command, message);
-	send(fd, sent_message, my_strlen(sent_message), 0);
+	core_message = get_core_message(message);
+	my_send(fd, command, core_message);
 }
 
 void send_infos(int sock, char **argv)
 {
-	int needed;
+	my_send(sock, argv[3], argv[4]);
+}
+
+void my_send(int fd, char *first_str, char *second_str)
+{
 	char *sent_message;
 
-	(void)sock;
-
-	needed = snprintf(NULL, 0, "%s;%s", argv[3], argv[4]) + 1;
-	sent_message = malloc(needed);
-	snprintf(sent_message, needed, "%s;%s", argv[3], argv[4]);
-	send(sock, sent_message, my_strlen(sent_message), 0);
+	sent_message = generate_message(my_strdup("%s;%s"), 1, first_str, second_str);
+	send(fd, sent_message, my_strlen(sent_message), 0);
+	free(sent_message);
 }
 
 char *get_core_message(char *message)

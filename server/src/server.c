@@ -151,15 +151,10 @@ void display_clients(t_server *server)
 void welcome_message(t_server *server, t_client *client)
 {
     char *message;
-    int needed;
 
-    needed = snprintf(NULL, 0, server->serv_config->welcome_message, client->nickname) + 1;
-    message = malloc(needed);
-    snprintf(message, needed, server->serv_config->welcome_message, client->nickname);
+    message = generate_message(server->serv_config->welcome_message, 0, client->nickname);
     send_special(client, my_strdup("info"), message);
-    needed = snprintf(NULL, 0, "%s joined the server with FD %d !\n", client->nickname, client->fd_id) + 1;
-    message = malloc(needed);
-    snprintf(message, needed, "%s joined the server with FD %d !\n", client->nickname, client->fd_id);
+    message = generate_message(my_strdup("%s joined the server with FD %d !\n"), 1, client->nickname, client->fd_id);
     put_info(message);
     free(message);
 }
@@ -168,11 +163,8 @@ void notify_new_client(t_server *server, t_client *client)
 {
     char *message;
     t_client *tmp;
-    size_t needed;
 
-    needed = snprintf(NULL, 0, "info;%s joined the server !\n", client->nickname) + 1;
-    message = malloc(needed);
-    snprintf(message, needed, "info;%s joined the server !\n", client->nickname);
+    message = generate_message(my_strdup("info;%s joined the server !\n"), 1, client->nickname);
     tmp = server->clients_list->first_client;
     while (tmp != NULL)
     {
@@ -220,13 +212,10 @@ void poll_events(t_server *server, t_client *client)
 
 void disconnect(t_server *server, t_client *client)
 {
-    int needed;
     char *message;
     t_client *current_client;
 
-    needed = snprintf(NULL, 0, "info;%s left the server !\n", client->nickname) + 1;
-    message = malloc(needed);
-    snprintf(message, needed, "info;%s left the server !\n", client->nickname);
+    message = generate_message(my_strdup("info;%s left the server !\n"), 1, client->nickname);
     put_info(message);
     remove_client_from_list(server, client);
     current_client = server->clients_list->first_client;

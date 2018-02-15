@@ -9,7 +9,7 @@ char *my_strdup(const char *str);
 int my_strcmp(const char *s1, const char *s2);
 int my_getnbr(char *str);
 char *readline(void);
-void *my_reset(char *, int);
+void my_reset(char *, int);
 char *my_strstr(char *str, char *to_find);
 char **parse_command(char *str, char delimiter);
 int get_nb_field(char *str, char delimiter);
