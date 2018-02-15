@@ -10,6 +10,8 @@ typedef struct s_config
 	uint 				max_clients;
 	t_channels_list		*channels_list;
 	char 				*welcome_message;
+    char                *default_color;
+    char                *default_bg_color;
 } t_config;
 
 typedef struct s_server
