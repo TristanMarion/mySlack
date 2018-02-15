@@ -52,6 +52,7 @@ int new_client(t_server *server)
     }
     client->clilen = sizeof(client->cli_addr);
     client->fd_id = accept(server->sockfd, (struct sockaddr *)&(client->cli_addr), &(client->clilen));
+    client->color = my_strdup("white");
     if (client->fd_id < 0)
         put_error("cannot accept\n");
     else
