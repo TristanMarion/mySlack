@@ -11,6 +11,7 @@
 #include <arpa/inet.h>
 #include <stdio.h>
 #include <unistd.h>
+
 #include "client.h"
 #include "clients_list.h"
 #include "server.h"
@@ -19,5 +20,6 @@
 #include "libmy.h"
 #include "command.h"
 #include "channel.h"
+#include "generate_message.h"
 
 #endif

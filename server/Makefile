@@ -12,7 +12,7 @@ CC		= gcc
 NAME		= server
 BUILD_PATH	= obj
 SRC		= src/server.c src/main.c src/clients_list.c  src/command.c  src/channel.c \
-			../common/libmy.c ../common/color.c ../common/display.c 
+			../common/libmy.c ../common/color.c ../common/display.c  ../common/generate_message.c
 OBJ		= $(SRC:%.c=%.o)
 INCLUDES	= -I ../includes -I ./includes
 CFLAGS		= -W -Wextra -Werror -Wall -pedantic $(INCLUDES)
