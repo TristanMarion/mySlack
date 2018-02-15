@@ -152,7 +152,6 @@ void welcome_message(t_server *server, t_client *client)
 {
     char *message;
 
-    message = NULL;
     message = generate_message(server->serv_config->welcome_message, 0, client->nickname);
     send_special(client, my_strdup("info"), message);
     message = generate_message(my_strdup("%s joined the server with FD %d !\n"), 1, client->nickname, client->fd_id);
@@ -216,7 +215,6 @@ void disconnect(t_server *server, t_client *client)
     char *message;
     t_client *current_client;
 
-    message = NULL;
     message = generate_message(my_strdup("info;%s left the server !\n"), 1, client->nickname);
     put_info(message);
     remove_client_from_list(server, client);
