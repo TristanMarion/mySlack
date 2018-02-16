@@ -52,8 +52,6 @@ int new_client(t_server *server)
     }
     client->clilen = sizeof(client->cli_addr);
     client->fd_id = accept(server->sockfd, (struct sockaddr *)&(client->cli_addr), &(client->clilen));
-    client->color = my_strdup("white");
-    client->bg_color = my_strdup("");
     if (client->fd_id < 0)
         put_error("cannot accept\n");
     else
@@ -82,6 +80,8 @@ void setup_client(t_server *server, t_client *client)
     client_infos = parse_command(received_infos, ';');
     my_strcpy(client->nickname, client_infos[0]);
     client->current_channel = get_channel(server, client_infos[1]);
+    client->color = my_strdup(server->serv_config->default_color);
+    client->bg_color = my_strdup(server->serv_config->default_bg_color);
 }
 
 int check_nickname(t_server *server, t_client *client)
@@ -241,6 +241,8 @@ t_config *get_config(char *path)
     config->max_clients = 4;
     config->channels_list = NULL;
     config->welcome_message = my_strdup("Bienvenue !");
+    config->default_color = my_strdup("white");
+    config->default_bg_color = my_strdup("");
     if ((file = fopen(path, "r")))
     {
         while (fgets(buffer, 255, file) != NULL)
@@ -255,7 +257,20 @@ t_config *get_config(char *path)
                 if (my_strcmp("channels", tab[0]) == 0)
                     config->channels_list = get_channels_list(tab[1]);
                 if (my_strcmp("welcome", tab[0]) == 0)
-                    config->welcome_message = tab[1];
+                {
+                    free(config->welcome_message);
+                    config->welcome_message = my_strdup(tab[1]);
+                }
+                if (my_strcmp("color", tab[0]) == 0)
+                {
+                    free(config->default_color);
+                    config->default_color = my_strdup(format_field(tab[1]));
+                }
+                if (my_strcmp("bg_color", tab[0]) == 0)
+                {
+                    free(config->default_bg_color);
+                    config->default_bg_color = my_strdup(format_field(tab[1]));
+                }
             }
         }
         fclose(file);
@@ -268,6 +283,13 @@ t_config *get_config(char *path)
         add_channel(config->channels_list, "General");
     }
     return config;
+}
+
+char *format_field(char *field)
+{
+    if (field[my_strlen(field) - 1] == '\n')
+        field[my_strlen(field) - 1] = 0;
+    return (field);
 }
 
 t_channels_list *get_channels_list(char *channels)

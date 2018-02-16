@@ -10,6 +10,8 @@ typedef struct s_config
 	uint 				max_clients;
 	t_channels_list		*channels_list;
 	char 				*welcome_message;
+    char                *default_color;
+    char                *default_bg_color;
 } t_config;
 
 typedef struct s_server
@@ -39,5 +41,6 @@ t_channels_list *get_channels_list(char *channels);
 t_channel *get_channel(t_server *server, char *name);
 void setup_client(t_server *server, t_client *client);
 t_client *get_client(t_server *server, char *name);
+char *format_field(char *field);
 
 #endif
