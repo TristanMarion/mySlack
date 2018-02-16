@@ -1,6 +1,6 @@
 port:12345
 max_clients:4
 welcome:Bienvenue à toi %s !
-color:cyan
-bg_color:yellow
+color:white
+bg_color:black
 channels:General,Random
