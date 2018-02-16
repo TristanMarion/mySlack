@@ -20,6 +20,6 @@
 #include "libmy.h"
 #include "command.h"
 #include "channel.h"
-#include "generate_message.h"
+#include "common.h"
 
 #endif
