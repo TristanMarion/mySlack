@@ -30,7 +30,7 @@ void manage_message(t_server *server, t_client *client, char *message, int is_se
     char *response;
 
     array_command = is_server_command ? server_command_array : client_command_array;
-    splitted_message = parse_command(message, ';');
+    splitted_message = parse_command(message, '\037');
     if ((command = get_command(splitted_message[0], array_command)) != NULL)
     {
         command->cmd_ptr(server, client, splitted_message);
@@ -51,7 +51,7 @@ void send_message(t_server *server, t_client *client, char **splitted_message)
     char *message;
 
     current_client = server->clients_list->first_client;
-    message = generate_message(my_strdup("message;%s;%s;%s;%s;%s"), 1, client->color, client->bg_color, client->current_channel->name, client->nickname, splitted_message[1]);
+    message = generate_message(my_strdup("message\037%s\037%s\037%s\037%s\037%s"), 1, client->color, client->bg_color, client->current_channel->name, client->nickname, splitted_message[1]);
     while (current_client != NULL)
     {
         if (current_client->fd_id != client->fd_id && my_strcmp(current_client->current_channel->name, client->current_channel->name) == 0)
@@ -137,7 +137,7 @@ void send_direct_message(char *nickname, int target, char *message)
 {
     char *sent_message;
 
-    sent_message = generate_message(my_strdup("direct_message;%s;%s"), 1, nickname, message);
+    sent_message = generate_message(my_strdup("direct_message\037%s\037%s"), 1, nickname, message);
     send(target, sent_message, my_strlen(sent_message), 0);
     free(sent_message);
 }
@@ -206,7 +206,7 @@ void notify_channel(t_server *server, t_client *client, char *action)
     char *message;
     t_client *current_client;
 
-    message = generate_message(my_strdup("info;%s %s this channel !"), 1, client->nickname, action);
+    message = generate_message(my_strdup("info\037%s %s this channel !"), 1, client->nickname, action);
     current_client = server->clients_list->first_client;
     while (current_client != NULL)
     {
@@ -328,7 +328,7 @@ void important(t_server *server, t_client *client, char **splitted_message)
         return;
     }
     current_client = server->clients_list->first_client;
-    message = generate_message(my_strdup("important;%s;%s"), 1, client->nickname, splitted_message[1]);
+    message = generate_message(my_strdup("important\037%s\037%s"), 1, client->nickname, splitted_message[1]);
     while (current_client != NULL)
     {
         if (current_client->fd_id != client->fd_id)

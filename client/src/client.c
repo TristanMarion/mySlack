@@ -4,9 +4,10 @@ void send_message(int fd, char *message)
 {
 	char *command;
 	char *core_message;
-	
+
 	command = get_message_command(message);
 	core_message = get_core_message(message);
+	put_info(core_message);
 	my_send(fd, command, core_message);
 }
 
@@ -19,7 +20,7 @@ void my_send(int fd, char *first_str, char *second_str)
 {
 	char *sent_message;
 
-	sent_message = generate_message(my_strdup("%s;%s"), 1, first_str, second_str);
+	sent_message = generate_message(my_strdup("%s\037%s"), 1, first_str, second_str);
 	send(fd, sent_message, my_strlen(sent_message), 0);
 	free(sent_message);
 }

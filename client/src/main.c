@@ -14,7 +14,7 @@ int main(int argc, char **argv)
     end = 0;
     if (argc < 4 || argc > 5)
     {
-        put_info("Usage : ./client <serv_addr> <port> <nickname> [channel]\n");
+        put_info("Usage : ./client <serv_addr> <port> <nickname> [channel]");
         return (1);
     }
 
@@ -34,7 +34,7 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    put_success("Connected\n");
+    put_success("Connected");
     send_infos(sock, argv);
     while (end == 0)
     {
