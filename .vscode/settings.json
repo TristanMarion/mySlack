@@ -16,7 +16,9 @@
         "channel.h": "c",
         "string.h": "c",
         "display.h": "c",
-        "message.h": "c"
+        "message.h": "c",
+        "server_command.h": "c",
+        "sending.h": "c"
     },
     "c-cpp-flylint.clang.warnings": [
         "all",
