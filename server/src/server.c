@@ -241,7 +241,7 @@ t_config *get_config(char *path)
     config->max_clients = 4;
     config->channels_list = NULL;
     config->welcome_message = my_strdup("Bienvenue !");
-    config->default_color = my_strdup("white");
+    config->default_color = my_strdup("red");
     config->default_bg_color = my_strdup("");
     if ((file = fopen(path, "r")))
     {
@@ -264,12 +264,14 @@ t_config *get_config(char *path)
                 if (my_strcmp("color", tab[0]) == 0)
                 {
                     free(config->default_color);
-                    config->default_color = my_strdup(tab[1]);
+                    config->default_color = my_strdup(format_field(tab[1]));
+                    my_putstr(config->default_color);
                 }
                 if (my_strcmp("bg_color", tab[0]) == 0)
                 {
                     free(config->default_bg_color);
-                    config->default_bg_color = my_strdup(tab[1]);
+                    config->default_bg_color = my_strdup(format_field(tab[1]));
+                    my_putstr(config->default_bg_color);
                 }
             }
         }
@@ -283,6 +285,13 @@ t_config *get_config(char *path)
         add_channel(config->channels_list, "General");
     }
     return config;
+}
+
+char *format_field(char *field)
+{
+    if (field[my_strlen(field) - 1] == '\n')
+        field[my_strlen(field) - 1] = 0;
+    return (field);
 }
 
 t_channels_list *get_channels_list(char *channels)
