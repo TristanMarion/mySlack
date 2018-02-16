@@ -6,7 +6,7 @@ void server_send_message(t_server *server, t_client *client, char **splitted_mes
     t_client *current_client;
     (void)client;
 
-    sent_message = generate_message(my_strdup("server;%s"), 1, splitted_message[0]);
+    sent_message = generate_message(my_strdup("server;%s"), 1, splitted_message[1]);
     current_client = server->clients_list->first_client;
     while (current_client != NULL)
     {
