@@ -241,7 +241,7 @@ t_config *get_config(char *path)
     config->max_clients = 4;
     config->channels_list = NULL;
     config->welcome_message = my_strdup("Bienvenue !");
-    config->default_color = my_strdup("red");
+    config->default_color = my_strdup("white");
     config->default_bg_color = my_strdup("");
     if ((file = fopen(path, "r")))
     {
