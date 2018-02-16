@@ -14,6 +14,7 @@ void message(char *message, int *end);
 void disconnect(char *message, int *end);
 void important(char *message, int *end);
 void direct_message(char *message, int *end);
+void server(char *message, int *end);
 const t_display_function *get_function(char *command);
 
 #endif
