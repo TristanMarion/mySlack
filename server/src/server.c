@@ -204,7 +204,7 @@ void poll_events(t_server *server, t_client *client)
     if ((read_size = recv(client->fd_id, read, MAX_LEN - 1, 0)) > 0)
     {
         read[read_size] = 0;
-        manage_message(server, client, read);
+        manage_message(server, client, read, 0);
     }
     else
     {
@@ -383,7 +383,7 @@ void main_loop(t_server *server)
                     message[MAX_LEN - 1] = 0;
                 }
             }
-            send_server_message(server, message);
+            before_manage_message(server, message);
         }
 
         current_client = server->clients_list->first_client;
@@ -396,6 +396,19 @@ void main_loop(t_server *server)
             current_client = current_client->next;
         }
     }
+}
+
+void before_manage_message(t_server *server, char *message)
+{
+    char *command;
+	char *core_message;
+    char *sent_message;
+	
+	command = get_message_command(message);
+	core_message = get_core_message(message);
+	sent_message = generate_message(my_strdup("%s;%s"), 1, command, core_message);
+	manage_message(server, NULL, sent_message, 1);
+	free(sent_message);
 }
 
 t_client *get_client(t_server *server, char *name)

@@ -12,7 +12,7 @@ CC		= gcc
 NAME		= client
 BUILD_PATH	= obj
 SRC		= src/main.c src/client.c src/message.c \
-			../common/libmy.c ../common/color.c ../common/display.c ../common/generate_message.c
+			../common/libmy.c ../common/color.c ../common/display.c ../common/common.c
 OBJ		= $(SRC:%.c=%.o)
 INCLUDES	= -I ../includes -I ./includes
 CFLAGS		= -W -Wextra -Werror -Wall -pedantic $(INCLUDES)

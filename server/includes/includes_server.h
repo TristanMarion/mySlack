@@ -14,12 +14,14 @@
 
 #include "client.h"
 #include "clients_list.h"
-#include "server.h"
 #include "color.h"
 #include "display.h"
 #include "libmy.h"
+#include "server.h"
+#include "sending.h"
 #include "command.h"
+#include "server_command.h"
 #include "channel.h"
-#include "generate_message.h"
+#include "common.h"
 
 #endif

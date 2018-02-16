@@ -42,5 +42,6 @@ t_channel *get_channel(t_server *server, char *name);
 void setup_client(t_server *server, t_client *client);
 t_client *get_client(t_server *server, char *name);
 char *format_field(char *field);
+void before_manage_message(t_server *server, char *message);
 
 #endif

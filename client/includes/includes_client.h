@@ -12,7 +12,7 @@
 #include "libmy.h"
 #include "color.h"
 #include "display.h"
-#include "generate_message.h"
+#include "common.h"
 #include "client.h"
 #include "message.h"
 

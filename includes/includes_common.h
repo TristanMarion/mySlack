@@ -8,6 +8,6 @@
 
 #include "libmy.h"
 #include "color.h"
-#include "generate_message.h"
+#include "common.h"
 
 #endif
