@@ -7,6 +7,7 @@ const t_display_function display_function_array[] = {
     {"message", message},
     {"direct_message", direct_message},
     {"important", important},
+    {"server", server},
     {NULL, NULL}};
 
 void handle_message(int *end, char *message)
@@ -83,6 +84,15 @@ void direct_message(char *message, int *end)
     my_putstr_color("", "", parsed_message[0], 0, 0, 0);
     my_putstr_color("", "", " - ", 0, 0, 0);
     my_putstr_color("", "", parsed_message[1], 0, 0, 1);
+    my_putstr("\n");
+}
+
+void server(char *message, int *end)
+{
+    (void)end;
+
+    my_putstr_color("yellow", "", "! ", 1, 0, 0);
+    my_putstr_color("yellow", "", parse_command(message, ';')[0], 1, 1, 1);
     my_putstr("\n");
 }
 
