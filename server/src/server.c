@@ -265,13 +265,11 @@ t_config *get_config(char *path)
                 {
                     free(config->default_color);
                     config->default_color = my_strdup(format_field(tab[1]));
-                    my_putstr(config->default_color);
                 }
                 if (my_strcmp("bg_color", tab[0]) == 0)
                 {
                     free(config->default_bg_color);
                     config->default_bg_color = my_strdup(format_field(tab[1]));
-                    my_putstr(config->default_bg_color);
                 }
             }
         }
