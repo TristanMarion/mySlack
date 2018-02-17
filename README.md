@@ -57,20 +57,32 @@ If a wrong command is sent, the server answers a help message to the user.
 
 Building the container :
 ```bash
+$ make build
+```
+```bash
 $ docker build -t myslack .
 ```
 
 Creating the network :
+```bash
+$ make create_network
+```
 ```bash
 $ docker network create -d bridge myslack
 ```
 
 Running the server :
 ```bash
+$ make start_server_container
+```
+```bash
 $ docker run --rm -it -v "$PWD:/usr/src/app" -w /usr/src/app --name server --net myslack myslack
 ```
 
 Running a client :
+```bash
+$ make start_client_container [NUMBER=<number>]
+```
 ```bash
 $ docker run --rm -it -v "$PWD:/usr/src/app" -w /usr/src/app --name client_1 --net myslack myslack
 ```
