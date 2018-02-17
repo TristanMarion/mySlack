@@ -1,6 +1,6 @@
 #include "includes_common.h"
 
-const char *reset_color = "\033[0m";
+const char *color_reset = "\033[0m";
 
 void my_putstr_color(char *color, char *bg_color, char *str, int bold, int underline, int italic)
 {
@@ -24,7 +24,7 @@ void my_putstr_color(char *color, char *bg_color, char *str, int bold, int under
         my_putstr(g_color[i].fg_unicode);
     my_putstr("m");
     my_putstr(str);
-    my_putstr(reset_color);
+    my_putstr(color_reset);
 }
 
 void print_special(int bold, int underline, int italic)
