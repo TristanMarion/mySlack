@@ -23,7 +23,7 @@ t_server *create_server(char *path)
 
 int init_server(t_server *server)
 {
-    put_info("Server up\n");
+    put_info("Server up");
     if ((bind(server->sockfd, (struct sockaddr *)&(server->serv_addr), sizeof(server->serv_addr))) < 0)
     {
         put_error("bind()");
@@ -35,8 +35,8 @@ int init_server(t_server *server)
         put_error("bind()");
         return (1);
     }
-    put_success("Server bind success\n");
-    put_info("Waiting for connections\n");
+    put_success("Server bind success");
+    put_info("Waiting for connections");
     return (0);
 }
 
@@ -47,13 +47,13 @@ int new_client(t_server *server)
 
     if ((client = malloc(sizeof(t_client))) == NULL)
     {
-        put_error("client error\n");
+        put_error("client error");
         return 1;
     }
     client->clilen = sizeof(client->cli_addr);
     client->fd_id = accept(server->sockfd, (struct sockaddr *)&(client->cli_addr), &(client->clilen));
     if (client->fd_id < 0)
-        put_error("cannot accept\n");
+        put_error("cannot accept");
     else
     {
         setup_client(server, client);
@@ -77,7 +77,7 @@ void setup_client(t_server *server, t_client *client)
     char **client_infos;
 
     recv(client->fd_id, received_infos, NICKNAME_MAX_LEN, 0);
-    client_infos = parse_command(received_infos, ';');
+    client_infos = parse_command(received_infos, '\037');
     my_strcpy(client->nickname, client_infos[0]);
     client->current_channel = get_channel(server, client_infos[1]);
     client->color = my_strdup(server->serv_config->default_color);
@@ -156,7 +156,7 @@ void welcome_message(t_server *server, t_client *client)
 
     message = generate_message(server->serv_config->welcome_message, 0, client->nickname);
     send_special(client, my_strdup("info"), message);
-    message = generate_message(my_strdup("%s joined the server with FD %d !\n"), 1, client->nickname, client->fd_id);
+    message = generate_message(my_strdup("%s joined the server with FD %d !"), 1, client->nickname, client->fd_id);
     put_info(message);
     free(message);
 }
@@ -166,7 +166,7 @@ void notify_new_client(t_server *server, t_client *client)
     char *message;
     t_client *tmp;
 
-    message = generate_message(my_strdup("info;%s joined the server !\n"), 1, client->nickname);
+    message = generate_message(my_strdup("info\037%s joined the server !"), 1, client->nickname);
     tmp = server->clients_list->first_client;
     while (tmp != NULL)
     {
@@ -217,7 +217,7 @@ void disconnect(t_server *server, t_client *client)
     char *message;
     t_client *current_client;
 
-    message = generate_message(my_strdup("info;%s left the server !\n"), 1, client->nickname);
+    message = generate_message(my_strdup("info\037%s left the server !"), 1, client->nickname);
     put_info(message);
     remove_client_from_list(server, client);
     current_client = server->clients_list->first_client;
@@ -406,7 +406,7 @@ void before_manage_message(t_server *server, char *message)
 	
 	command = get_message_command(message);
 	core_message = get_core_message(message);
-	sent_message = generate_message(my_strdup("%s;%s"), 1, command, core_message);
+	sent_message = generate_message(my_strdup("%s\037%s"), 1, command, core_message);
 	manage_message(server, NULL, sent_message, 1);
 	free(sent_message);
 }
