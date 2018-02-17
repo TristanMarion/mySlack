@@ -59,6 +59,7 @@ If a wrong command is sent, the server answers a help message to the user.
 ```bash
 $ make build
 ```
+Or
 ```bash
 $ docker build -t myslack .
 ```
@@ -67,6 +68,7 @@ $ docker build -t myslack .
 ```bash
 $ make create_network
 ```
+Or
 ```bash
 $ docker network create -d bridge myslack
 ```
