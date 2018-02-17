@@ -16,6 +16,8 @@ const t_server_command client_command_array[] = {
     {"color", color, "Changes your messages' color"},
     {"bg_color", bg_color, "Changes your messages' background color"},
     {"list_colors", list_colors, "Lists all available colors for your messages and messages' background"},
+    {"reset_color", reset_color, "Reset your messages' color"},
+    {"reset_bg_color", reset_bg_color, "Reset your messages' background color"},
     {NULL, NULL, NULL}};
 
 const t_server_command server_command_array[] = {
@@ -380,6 +382,36 @@ void change_color(t_client *client, char *mode, char *message)
     free(to_change);
     to_change = my_strdup(splitted_core_message[0]);
     sent_message = generate_message(my_strdup("You changed your messages' %s to %s"), 1, mode, to_change);
+    send_special(client, my_strdup("info"), sent_message);
+}
+
+void reset_color(t_server *server, t_client *client, char **splitted_message)
+{
+    (void)server;
+
+    reset_colors(server, client, splitted_message[0]);
+}
+
+void reset_bg_color(t_server *server, t_client *client, char **splitted_message)
+{
+    (void)server;
+
+    reset_colors(server, client, splitted_message[0]);
+}
+
+void reset_colors(t_server *server, t_client *client, char *mode)
+{
+    t_config *config;
+    int i_mode;
+    char *sent_message;
+    char *to_change;
+
+    config = server->serv_config;
+    i_mode = my_strcmp(mode, "reset_color") ? 1 : 0;
+    to_change = i_mode == 0 ? client->color : client->bg_color;
+    free(to_change);
+    to_change = my_strdup(i_mode == 0 ? config->default_color : config->default_bg_color);
+    sent_message = generate_message(my_strdup("You reseted your messages' %s to %s"), 1, mode, to_change);
     send_special(client, my_strdup("info"), sent_message);
 }
 

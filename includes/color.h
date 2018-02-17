@@ -19,6 +19,7 @@ static const t_color g_color[] = {{"clear", "\033[H\033[2J", ""},
                                   {"magenta", "35", "45"},
                                   {"cyan", "36", "46"},
                                   {"white", "37", "47"},
+                                  {"none", "", ""},
                                   {NULL, NULL, NULL}};
 
 void my_putstr_color(char *color, char *bg_color, char *str, int bold, int underline, int italic);

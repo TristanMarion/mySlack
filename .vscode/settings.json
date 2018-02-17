@@ -18,7 +18,9 @@
         "display.h": "c",
         "message.h": "c",
         "server_command.h": "c",
-        "sending.h": "c"
+        "sending.h": "c",
+        "stdarg.h": "c",
+        "unistd.h": "c"
     },
     "c-cpp-flylint.clang.warnings": [
         "all",
