@@ -218,7 +218,6 @@ void disconnect(t_server *server, t_client *client)
     t_client *current_client;
 
     message = generate_message(my_strdup("info\037%s left the server !"), 1, client->nickname);
-    put_info(message);
     remove_client_from_list(server, client);
     current_client = server->clients_list->first_client;
     while (current_client != NULL)

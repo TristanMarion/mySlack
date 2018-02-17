@@ -81,6 +81,7 @@ void direct_message(char *message, int *end)
     (void)end;
 
     parsed_message = parse_command(message, '\037');
+    my_putstr_color("", "", "~ ", 1, 0, 0);
     my_putstr_color("", "", parsed_message[0], 0, 0, 0);
     my_putstr_color("", "", " - ", 0, 0, 0);
     my_putstr_color("", "", parsed_message[1], 0, 0, 1);
