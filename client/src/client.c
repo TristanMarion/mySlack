@@ -7,7 +7,6 @@ void send_message(int fd, char *message)
 
 	command = get_message_command(message);
 	core_message = get_core_message(message);
-	put_info(core_message);
 	my_send(fd, command, core_message);
 }
 
