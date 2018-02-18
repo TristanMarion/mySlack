@@ -7,6 +7,7 @@ const t_server_command server_command_array[] = {
     {"mute", mute, "Mutes a user"},
     {"unmute", unmute, "Unmutes a user"},
     {"list_commands", list_server_commands, "List all available server commands"},
+    {"stop", stop, "Stops the server"},
     {NULL, NULL, NULL}};
 
 void server_manage_message(t_server *server, int *end, char *message)
@@ -169,6 +170,22 @@ void list_server_commands(t_server *server, int *end, char **splitted_message)
         i++;
     }
     put_info(my_strdup(all_commands));
+}
+
+void stop(t_server *server, int *end, char **splitted_message)
+{
+    t_client *current_client;
+    (void) splitted_message;
+
+    current_client = server->clients_list->first_client;
+    while (current_client != NULL)
+    {
+        send_special(current_client, my_strdup("disconnect"), my_strdup("The server has been stopped"));
+        remove_client_from_list(server, current_client);
+        current_client = current_client->next;
+    }
+    server_info(my_strdup("The server will now stop"));
+    *end = 1;
 }
 
 void server_error(char *error)

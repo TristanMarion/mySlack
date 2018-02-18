@@ -17,6 +17,7 @@ void mute(t_server *server, int *end, char **splitted_message);
 void unmute(t_server *server, int *end, char **splitted_message);
 void create_channel(t_server *server, int *end, char **splitted_message);
 void list_server_commands(t_server *server, int *end, char **splitted_message);
+void stop(t_server *server, int *end, char **splitted_message);
 void server_error(char *error);
 void server_info(char *info);
 const t_server_command *get_server_command(char *command);
