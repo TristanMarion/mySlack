@@ -18,6 +18,7 @@ const t_server_command client_command_array[] = {
     {"list_colors", list_colors, "Lists all available colors for your messages and messages' background"},
     {"reset_color", reset_color, "Reset your messages' color"},
     {"reset_bg_color", reset_bg_color, "Reset your messages' background color"},
+    {"logout", logout, "Disconnects you from the server"},
     {NULL, NULL, NULL}};
 
 const t_server_command server_command_array[] = {
@@ -438,6 +439,14 @@ void list_colors(t_server *server, t_client *client, char **splitted_message)
         i++;
     }
     send_special(client, my_strdup("info"), all_colors);
+}
+
+void logout(t_server *server, t_client *client, char **splitted_message)
+{
+    (void)splitted_message;
+    
+    send_special(client, my_strdup("disconnect"), my_strdup("You have been disconnected, bye !"));
+    disconnect(server, client);
 }
 
 const t_server_command *get_command(char *command, const t_server_command *array_command)
