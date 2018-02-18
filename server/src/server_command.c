@@ -6,6 +6,8 @@ void server_send_message(t_server *server, t_client *client, char **splitted_mes
     t_client *current_client;
     (void)client;
 
+    if (my_strcmp(splitted_message[1], "") == 0)
+        return;
     sent_message = generate_message(my_strdup("server\037%s"), 1, splitted_message[1]);
     current_client = server->clients_list->first_client;
     while (current_client != NULL)
