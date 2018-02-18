@@ -35,5 +35,6 @@ void reset_colors(t_server *server, t_client *client, char *mode);
 void reset_bg_color(t_server *server, t_client *client, char **splitted_message);
 void reset_color(t_server *server, t_client *client, char **splitted_message);
 void logout(t_server *server, t_client *client, char **splitted_message);
+void list_server_commands(t_server *server, t_client *client, char **splitted_message);
 
 #endif

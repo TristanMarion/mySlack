@@ -27,6 +27,7 @@ const t_server_command server_command_array[] = {
     {"create_channel", create_channel, "Creates a channel"},
     {"mute", mute, "Mutes a user"},
     {"unmute", unmute, "Unmutes a user"},
+    {"list_commands", list_server_commands, "List all available server commands"},
     {NULL, NULL, NULL}};
 
 void manage_message(t_server *server, t_client *client, char *message, int is_server_command)
@@ -460,6 +461,34 @@ void logout(t_server *server, t_client *client, char **splitted_message)
 
     send_special(client, my_strdup("disconnect"), my_strdup("You have been disconnected, bye !"));
     disconnect(server, client);
+}
+
+
+void list_server_commands(t_server *server, t_client *client, char **splitted_message)
+{
+    int i;
+    int len;
+    t_server_command current_command;
+    char *all_commands;
+    (void)server;
+    (void)splitted_message;
+    (void)client;
+
+    i = 0;
+    all_commands = my_strdup("List of all server commands :\n");
+    len = my_strlen(all_commands);
+    while ((current_command = server_command_array[i]).command != NULL)
+    {
+        len += my_strlen(current_command.command) + my_strlen(current_command.description) + 8;
+        all_commands = realloc(all_commands, len);
+        my_strcat(all_commands, "\t- ");
+        my_strcat(all_commands, current_command.command);
+        my_strcat(all_commands, " : ");
+        my_strcat(all_commands, current_command.description);
+        my_strcat(all_commands, "\n");
+        i++;
+    }
+    put_info(my_strdup(all_commands));
 }
 
 const t_server_command *get_command(char *command, const t_server_command *array_command)
