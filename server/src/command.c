@@ -26,6 +26,7 @@ const t_server_command server_command_array[] = {
     {"kick", kick, "Disconnects a user from the server"},
     {"create_channel", create_channel, "Creates a channel"},
     {"mute", mute, "Mutes a user"},
+    {"unmute", unmute, "Unmutes a user"},
     {NULL, NULL, NULL}};
 
 void manage_message(t_server *server, t_client *client, char *message, int is_server_command)
