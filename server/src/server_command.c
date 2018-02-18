@@ -37,8 +37,34 @@ void kick(t_server *server, t_client *client, char **splitted_message)
     remove_client_from_list(server, kicked_client);
 }
 
+void create_channel(t_server *server, t_client *client, char **splitted_message)
+{
+    char **splitted_core_message;
+    (void)client;
+
+    splitted_core_message = parse_command(splitted_message[1], ' ');
+    if (my_strlen(splitted_core_message[0]) <= 0)
+    {
+        server_error(my_strdup("Usage : /create_channel <channel>"));
+        return;
+    }
+    if (!check_channel_availability(server, splitted_core_message[0]))
+    {
+        server_error(my_strdup("This channel already exists"));
+        return;
+    }
+    add_channel(server->serv_config->channels_list, my_strdup(splitted_core_message[0]));
+    server_info(generate_message(my_strdup("Channel %s created"), 1, splitted_core_message[0]));
+}
+
 void server_error(char *error)
 {
     put_error(error);
     free(error);
+}
+
+void server_info(char *info)
+{
+    put_info(info);
+    free(info);
 }

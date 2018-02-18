@@ -24,6 +24,7 @@ const t_server_command client_command_array[] = {
 const t_server_command server_command_array[] = {
     {"send_message", server_send_message, "Sends a message to all connected users"},
     {"kick", kick, "Disconnects a user from the server"},
+    {"create_channel", create_channel, "Creates a channel"},
     {NULL, NULL, NULL}};
 
 void manage_message(t_server *server, t_client *client, char *message, int is_server_command)
