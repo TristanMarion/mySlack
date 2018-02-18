@@ -205,7 +205,7 @@ void poll_events(t_server *server, t_client *client)
     if ((read_size = recv(client->fd_id, read, MAX_LEN - 1, 0)) > 0)
     {
         read[read_size] = 0;
-        manage_message(server, client, read, 0);
+        manage_message(server, client, read);
     }
     else
     {
@@ -336,8 +336,10 @@ void main_loop(t_server *server)
     t_client *current_client;
     int max;
     char message[MAX_LEN];
+    int end;
 
-    while (1)
+    end = 0;
+    while (end == 0)
     {
         FD_ZERO(&(server->fds));
         FD_SET(0, &(server->fds));
@@ -383,7 +385,7 @@ void main_loop(t_server *server)
                     message[MAX_LEN - 1] = 0;
                 }
             }
-            before_manage_message(server, message);
+            before_manage_message(server, message, &end);
         }
 
         current_client = server->clients_list->first_client;
@@ -398,7 +400,7 @@ void main_loop(t_server *server)
     }
 }
 
-void before_manage_message(t_server *server, char *message)
+void before_manage_message(t_server *server, char *message, int *end)
 {
     char *command;
 	char *core_message;
@@ -407,7 +409,7 @@ void before_manage_message(t_server *server, char *message)
 	command = get_message_command(message);
 	core_message = get_core_message(message);
 	sent_message = generate_message(my_strdup("%s\037%s"), 1, command, core_message);
-	manage_message(server, NULL, sent_message, 1);
+	server_manage_message(server, end, sent_message);
 	free(sent_message);
 }
 

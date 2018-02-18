@@ -1,6 +1,6 @@
 #include "includes_server.h"
 
-const t_server_command client_command_array[] = {
+const t_client_command client_command_array[] = {
     {"send_message", send_message, "Sends a message to all connected users in your channel"},
     {"list_commands", list_commands, "Lists all available commands"},
     {"commands_list", list_commands, "Lists all available commands"},
@@ -21,36 +21,20 @@ const t_server_command client_command_array[] = {
     {"logout", logout, "Disconnects you from the server"},
     {NULL, NULL, NULL}};
 
-const t_server_command server_command_array[] = {
-    {"send_message", server_send_message, "Sends a message to all connected users"},
-    {"kick", kick, "Disconnects a user from the server"},
-    {"create_channel", create_channel, "Creates a channel"},
-    {"mute", mute, "Mutes a user"},
-    {"unmute", unmute, "Unmutes a user"},
-    {"list_commands", list_server_commands, "List all available server commands"},
-    {NULL, NULL, NULL}};
-
-void manage_message(t_server *server, t_client *client, char *message, int is_server_command)
+void manage_message(t_server *server, t_client *client, char *message)
 {
     char **splitted_message;
-    const t_server_command *array_command;
-    const t_server_command *command;
+    const t_client_command *command;
     char *response;
 
-    array_command = is_server_command ? server_command_array : client_command_array;
     splitted_message = parse_command(message, '\037');
-    if ((command = get_command(splitted_message[0], array_command)) != NULL)
+    if ((command = get_command(splitted_message[0])) != NULL)
     {
         command->cmd_ptr(server, client, splitted_message);
         return;
     }
     response = my_strdup("Unknown command. Type /list_commands to show available commands.");
-    if (!is_server_command)
-    {
-        send_special(client, my_strdup("error"), response);
-        return;
-    }
-    server_error(response);
+    send_special(client, my_strdup("error"), response);
 }
 
 void send_message(t_server *server, t_client *client, char **splitted_message)
@@ -78,7 +62,7 @@ void list_commands(t_server *server, t_client *client, char **splitted_message)
 {
     int i;
     int len;
-    t_server_command current_command;
+    t_client_command current_command;
     char *all_commands;
     (void)server;
     (void)splitted_message;
@@ -102,7 +86,7 @@ void list_commands(t_server *server, t_client *client, char **splitted_message)
 
 void help(t_server *server, t_client *client, char **splitted_message)
 {
-    const t_server_command *command;
+    const t_client_command *command;
     char *sent_message;
     char **splitted_core_message;
     (void)server;
@@ -113,7 +97,7 @@ void help(t_server *server, t_client *client, char **splitted_message)
         send_special(client, my_strdup("error"), my_strdup("Usage: /help <command>, available commands : /list_commands"));
         return;
     }
-    if ((command = get_command(splitted_core_message[0], client_command_array)) != NULL)
+    if ((command = get_command(splitted_core_message[0])) != NULL)
     {
         sent_message = generate_message(my_strdup("%s : %s"), 1, command->command, command->description);
         send_special(client, my_strdup("info"), sent_message);
@@ -463,41 +447,13 @@ void logout(t_server *server, t_client *client, char **splitted_message)
     disconnect(server, client);
 }
 
-
-void list_server_commands(t_server *server, t_client *client, char **splitted_message)
+const t_client_command *get_command(char *command)
 {
     int i;
-    int len;
-    t_server_command current_command;
-    char *all_commands;
-    (void)server;
-    (void)splitted_message;
-    (void)client;
+    const t_client_command *current_command;
 
     i = 0;
-    all_commands = my_strdup("List of all server commands :\n");
-    len = my_strlen(all_commands);
-    while ((current_command = server_command_array[i]).command != NULL)
-    {
-        len += my_strlen(current_command.command) + my_strlen(current_command.description) + 8;
-        all_commands = realloc(all_commands, len);
-        my_strcat(all_commands, "\t- ");
-        my_strcat(all_commands, current_command.command);
-        my_strcat(all_commands, " : ");
-        my_strcat(all_commands, current_command.description);
-        my_strcat(all_commands, "\n");
-        i++;
-    }
-    put_info(my_strdup(all_commands));
-}
-
-const t_server_command *get_command(char *command, const t_server_command *array_command)
-{
-    int i;
-    const t_server_command *current_command;
-
-    i = 0;
-    while ((current_command = &(array_command[i]))->command != NULL)
+    while ((current_command = &(client_command_array[i]))->command != NULL)
     {
         if (my_strcmp(current_command->command, command) == 0)
             return current_command;

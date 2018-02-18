@@ -3,14 +3,14 @@
 
 #include "includes_server.h"
 
-typedef struct s_server_command
+typedef struct s_client_command
 {
     char *command;
     void (*cmd_ptr)(t_server *server, t_client *client, char **splitted_message);
     char *description;
-} t_server_command;
+} t_client_command;
 
-void manage_message(t_server *server, t_client *client, char *message, int is_server_command);
+void manage_message(t_server *server, t_client *client, char *message);
 void send_message(t_server *server, t_client *client, char **splitted_message);
 void list_commands(t_server *server, t_client *client, char **splitted_message);
 void direct_message(t_server *server, t_client *client, char **splitted_message);
@@ -23,7 +23,7 @@ int check_channel_availability(t_server *server, char *name);
 void create(t_server *server, t_client *client, char **splitted_message);
 void notify_channel(t_server *server, t_client *client, char *action);
 void ping(t_server *server, t_client *client, char **splitted_message);
-const t_server_command *get_command(char *command, const t_server_command *array_command);
+const t_client_command *get_command(char *command);
 void nickname(t_server *server, t_client *client, char **splitted_message);
 void important(t_server *server, t_client *client, char **splitted_message);
 void color(t_server *server, t_client *client, char **splitted_message);
@@ -35,6 +35,5 @@ void reset_colors(t_server *server, t_client *client, char *mode);
 void reset_bg_color(t_server *server, t_client *client, char **splitted_message);
 void reset_color(t_server *server, t_client *client, char **splitted_message);
 void logout(t_server *server, t_client *client, char **splitted_message);
-void list_server_commands(t_server *server, t_client *client, char **splitted_message);
 
 #endif
