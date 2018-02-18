@@ -7,6 +7,9 @@ void send_message(int fd, char *message)
 
 	command = get_message_command(message);
 	core_message = get_core_message(message);
+	if (my_strcmp(core_message, "") == 0)
+		return;
+	put_info(core_message);
 	my_send(fd, command, core_message);
 }
 
