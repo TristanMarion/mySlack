@@ -82,6 +82,7 @@ void setup_client(t_server *server, t_client *client)
     client->current_channel = get_channel(server, client_infos[1]);
     client->color = my_strdup(server->serv_config->default_color);
     client->bg_color = my_strdup(server->serv_config->default_bg_color);
+    client->muted = 0;
 }
 
 int check_nickname(t_server *server, t_client *client)
