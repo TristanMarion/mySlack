@@ -78,6 +78,8 @@ void mute(t_server *server, t_client *client, char **splitted_message)
         message = my_strdup("Usage : /mute <nickname> [reason]");
     else if ((muted_client = get_client(server, splitted_core_message[0])) == NULL)
         message = my_strdup("User not found");
+    else if (muted_client->muted == 1)
+        message = my_strdup("User is already muted");
     if (message != NULL)
     {
         server_error(message);
@@ -105,6 +107,8 @@ void unmute(t_server *server, t_client *client, char **splitted_message)
         message = my_strdup("Usage : /unmute <nickname>");
     else if ((unmuted_client = get_client(server, splitted_core_message[0])) == NULL)
         message = my_strdup("User not found");
+    else if (unmuted_client->muted == 0)
+        message = my_strdup("User is not muted");
     if (message != NULL)
     {
         server_error(message);
