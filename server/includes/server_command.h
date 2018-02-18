@@ -6,5 +6,6 @@
 void server_send_message(t_server *server, t_client *client, char **splitted_message);
 void kick(t_server *server, t_client *client, char **splitted_message);
 void server_error(char *error);
+void create_channel(t_server *server, t_client *client, char **splitted_message);
 
 #endif
