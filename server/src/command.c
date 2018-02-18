@@ -25,6 +25,7 @@ const t_server_command server_command_array[] = {
     {"send_message", server_send_message, "Sends a message to all connected users"},
     {"kick", kick, "Disconnects a user from the server"},
     {"create_channel", create_channel, "Creates a channel"},
+    {"mute", mute, "Mutes a user"},
     {NULL, NULL, NULL}};
 
 void manage_message(t_server *server, t_client *client, char *message, int is_server_command)
@@ -55,6 +56,11 @@ void send_message(t_server *server, t_client *client, char **splitted_message)
     t_client *current_client;
     char *message;
 
+    if (client->muted == 1)
+    {
+        send_special(client, my_strdup("error"), my_strdup("No one cares, you are muted... (probably for a good reason)"));
+        return;
+    }
     current_client = server->clients_list->first_client;
     message = generate_message(my_strdup("message\037%s\037%s\037%s\037%s\037%s"), 1, client->color, client->bg_color, client->current_channel->name, client->nickname, splitted_message[1]);
     while (current_client != NULL)
@@ -332,6 +338,11 @@ void important(t_server *server, t_client *client, char **splitted_message)
         send_special(client, my_strdup("error"), my_strdup("Usage : /important <message>"));
         return;
     }
+    if (client->muted == 1)
+    {
+        send_special(client, my_strdup("error"), my_strdup("No one cares, you are muted... (probably for a good reason)"));
+        return;
+    }
     current_client = server->clients_list->first_client;
     message = generate_message(my_strdup("important\037%s\037%s"), 1, client->nickname, splitted_message[1]);
     while (current_client != NULL)
@@ -445,7 +456,7 @@ void list_colors(t_server *server, t_client *client, char **splitted_message)
 void logout(t_server *server, t_client *client, char **splitted_message)
 {
     (void)splitted_message;
-    
+
     send_special(client, my_strdup("disconnect"), my_strdup("You have been disconnected, bye !"));
     disconnect(server, client);
 }

@@ -14,6 +14,7 @@ typedef struct s_client
     char                        *color;
     char                        *bg_color;
     struct s_channel 			*current_channel;
+    int                         muted;
 } t_client;
 
 #endif

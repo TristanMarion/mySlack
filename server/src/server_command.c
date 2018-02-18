@@ -21,21 +21,27 @@ void server_send_message(t_server *server, t_client *client, char **splitted_mes
 void kick(t_server *server, t_client *client, char **splitted_message)
 {
     t_client *kicked_client;
-    char *error_message;
+    char *message;
+    char **splitted_core_message;
     (void)client;
 
-    error_message = NULL;
-    if (my_strlen(splitted_message[1]) == 0)
-        error_message = my_strdup("Usage : /kick <nickname>");
-    /* Maybe should we replace `splitted_message[1]` with a `parse_command(splitted_message[1], ' ')[0]` */
-    else if ((kicked_client = get_client(server, splitted_message[1])) == NULL)
-        error_message = my_strdup("User not found");
-    if (error_message != NULL)
+    message = NULL;
+    splitted_core_message = parse_command(splitted_message[1], ' ');
+    if (my_strlen(splitted_core_message[0]) == 0)
+        message = my_strdup("Usage : /kick <nickname>");
+    else if ((kicked_client = get_client(server, splitted_core_message[0])) == NULL)
+        message = my_strdup("User not found");
+    if (message != NULL)
     {
-        server_error(error_message);
+        server_error(message);
         return;
     }
-    send_special(kicked_client, my_strdup("disconnect"), my_strdup("You have been kicked from the server."));
+    if (splitted_core_message[1] != NULL)
+        message = generate_message(my_strdup("You have been kicked from the server. Reason : %s"),
+                                   1, my_implode(splitted_core_message, " ", 1));
+    else
+        message = my_strdup("You have been kicked from the server.");
+    send_special(kicked_client, my_strdup("disconnect"), message);
     remove_client_from_list(server, kicked_client);
 }
 
@@ -57,6 +63,33 @@ void create_channel(t_server *server, t_client *client, char **splitted_message)
     }
     add_channel(server->serv_config->channels_list, my_strdup(splitted_core_message[0]));
     server_info(generate_message(my_strdup("Channel %s created"), 1, splitted_core_message[0]));
+}
+
+void mute(t_server *server, t_client *client, char **splitted_message)
+{
+    t_client *muted_client;
+    char *message;
+    char **splitted_core_message;
+    (void)client;
+
+    message = NULL;
+    splitted_core_message = parse_command(splitted_message[1], ' ');
+    if (my_strlen(splitted_core_message[0]) == 0)
+        message = my_strdup("Usage : /mute <nickname> [reason]");
+    else if ((muted_client = get_client(server, splitted_core_message[0])) == NULL)
+        message = my_strdup("User not found");
+    if (message != NULL)
+    {
+        server_error(message);
+        return;
+    }
+    if (splitted_core_message[1] != NULL)
+        message = generate_message(my_strdup("You have been muted. Reason : %s"), 1, my_implode(splitted_core_message, " ", 1));
+    else
+        message = my_strdup("You have been muted.");
+    send_special(muted_client, my_strdup("info"), message);
+    put_info(generate_message(my_strdup("%s has been muted."), 1, muted_client->nickname));
+    muted_client->muted = 1;
 }
 
 void server_error(char *error)
