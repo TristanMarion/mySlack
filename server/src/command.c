@@ -220,6 +220,11 @@ void leave(t_server *server, t_client *client, char **splitted_message)
     char *sent_message;
     (void)splitted_message;
 
+    if (my_strcmp(client->current_channel->name, server->serv_config->channels_list->first_channel->name) == 0)
+    {
+        send_special(client, my_strdup("error"), my_strdup("You can't leave the default channel"));
+        return;
+    }
     notify_channel(server, client, my_strdup("left"));
     client->current_channel = get_channel(server, my_strdup(server->serv_config->channels_list->first_channel->name));
     sent_message = generate_message(my_strdup("You are back in %s"), 1, client->current_channel->name);
