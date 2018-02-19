@@ -232,9 +232,9 @@ void leave(t_server *server, t_client *client, char **splitted_message)
         send_special(client, my_strdup("error"), my_strdup("You can't leave the default channel"));
         return;
     }
+    move_client(server, client, server->serv_config->channels_list->first_channel);
     sent_message = generate_message(my_strdup("You are back in %s"), 1, client->current_channel->name);
     send_special(client, my_strdup("info"), sent_message);
-    move_client(server, client, server->serv_config->channels_list->first_channel);
 }
 
 void create(t_server *server, t_client *client, char **splitted_message)
