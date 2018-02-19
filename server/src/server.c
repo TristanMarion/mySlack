@@ -75,14 +75,18 @@ void setup_client(t_server *server, t_client *client)
 {
     char received_infos[NICKNAME_MAX_LEN];
     char **client_infos;
+    t_channel *target_channel;
 
     recv(client->fd_id, received_infos, NICKNAME_MAX_LEN, 0);
     client_infos = parse_command(received_infos, '\037');
     my_strcpy(client->nickname, client_infos[0]);
-    client->current_channel = get_channel(server, client_infos[1]);
     client->color = my_strdup(server->serv_config->default_color);
     client->bg_color = my_strdup(server->serv_config->default_bg_color);
     client->muted = 0;
+    target_channel = get_channel(server, client_infos[1]);
+    if (target_channel == NULL)
+        target_channel = server->serv_config->channels_list->first_channel;
+    move_client(server, client, target_channel);
 }
 
 int check_nickname(t_server *server, t_client *client)
@@ -99,7 +103,6 @@ int check_nickname(t_server *server, t_client *client)
 
 void add_client_to_list(t_server *server, t_client *client)
 {
-    notify_new_client(server, client);
     welcome_message(server, client);
     client->prev = NULL;
     client->next = NULL;
@@ -157,27 +160,9 @@ void welcome_message(t_server *server, t_client *client)
 
     message = generate_message(server->serv_config->welcome_message, 0, client->nickname);
     send_special(client, my_strdup("info"), message);
-    message = generate_message(my_strdup("%s joined the server with FD %d !"), 1, client->nickname, client->fd_id);
-    put_info(message);
-    free(message);
 }
 
-void notify_new_client(t_server *server, t_client *client)
-{
-    char *message;
-    t_client *tmp;
-
-    message = generate_message(my_strdup("info\037%s joined the server !"), 1, client->nickname);
-    tmp = server->clients_list->first_client;
-    while (tmp != NULL)
-    {
-        send(tmp->fd_id, message, my_strlen(message), 0);
-        tmp = tmp->next;
-    }
-    free(message);
-}
-
-void add_channel(t_channels_list *channels_list, char *name)
+t_channel *add_channel(t_channels_list *channels_list, char *name)
 {
     t_channel *channel;
 
@@ -195,6 +180,7 @@ void add_channel(t_channels_list *channels_list, char *name)
         channels_list->last_channel->next = channel;
     }
     channels_list->last_channel = channel;
+    return (channel);
 }
 
 void poll_events(t_server *server, t_client *client)
@@ -215,18 +201,8 @@ void poll_events(t_server *server, t_client *client)
 
 void disconnect(t_server *server, t_client *client)
 {
-    char *message;
-    t_client *current_client;
-
-    message = generate_message(my_strdup("info\037%s left the server !"), 1, client->nickname);
+    move_client(server, client, NULL);
     remove_client_from_list(server, client);
-    current_client = server->clients_list->first_client;
-    while (current_client != NULL)
-    {
-        send(current_client->fd_id, message, my_strlen(message), 0);
-        current_client = current_client->next;
-    }
-    free(message);
 }
 
 t_config *get_config(char *path)
@@ -328,7 +304,7 @@ t_channel *get_channel(t_server *server, char *name)
         current_channel = current_channel->next;
     }
     free(name);
-    return (server->serv_config->channels_list->first_channel);
+    return (NULL);
 }
 
 void main_loop(t_server *server)
