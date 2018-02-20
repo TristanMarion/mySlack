@@ -13,6 +13,7 @@ typedef struct s_markdown_entity
 	style 	style;
 	char 	symbol;
 	char 	*escape_sequence;
+	char 	*reset_sequence;
 } t_markdown_entity;
 
 char *generate_message(char *str, int do_free, ...);

@@ -71,9 +71,9 @@ char *get_message_command(char *message)
 }
 
 const t_markdown_entity markdown_entities_array[] = {
-    {Bold, '*', "\033[1m"},
-    {Underline, '_', "\033[4m"},
-    {-1, -1, ""}};
+    {Bold, '*', "\033[1m", "\033[22m"},
+    {Underline, '_', "\033[4m", "\033[24m"},
+    {-1, -1, "", ""}};
 
 
 t_markdown_entity trigger_markdown(char *str, int index)
@@ -130,6 +130,7 @@ void format_and_apply_markdown(char *str, int begin, int end, t_markdown_entity 
     {
         entity.style = Italic;
         entity.escape_sequence = "\033[3m";
+        entity.reset_sequence = "\033[23m";
         remove_character(str, begin);
         remove_character(str, end - 1);
         apply_markdown(str, begin, end, entity);
@@ -164,18 +165,12 @@ void apply_markdown(char *str, int begin, int end, t_markdown_entity entity)
     k = 0;
     new_message = malloc(sizeof(char) * my_strlen(str) + 8);
     for (i = 0 ; i < begin ; i++)
-    {
         new_message[i] = str[i];
-    }
     my_strcat(new_message, entity.escape_sequence);
     for (j = begin ; j < end - 1 ; j++)
-    {
         new_message[j + 4] = str[j];
-    }
-    my_strcat(new_message, "\033[0m");
+    my_strcat(new_message, entity.reset_sequence);
     for (k = end - 1 ; k < my_strlen(str) ; k++)
-    {
-        new_message[k + 8] = str[k];
-    }
+        new_message[k + 9] = str[k];
     my_strcpy(str, new_message);
 }
