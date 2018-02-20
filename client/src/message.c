@@ -66,6 +66,7 @@ void message(char *message, int *end)
     (void)end;
 
     parsed_message = parse_command(message, '\037');
+    poll_markdown_triggers(parsed_message[4]);
     my_putstr_color("", "", "[", 0, 0, 0);
     my_putstr_color("", "", parsed_message[2], 0, 0, 0);
     my_putstr_color("", "", "] ", 0, 0, 0);

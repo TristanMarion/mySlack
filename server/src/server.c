@@ -419,3 +419,4 @@ t_client *get_client(t_server *server, char *name)
     }
     return (NULL);
 }
+
