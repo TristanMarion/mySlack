@@ -190,9 +190,9 @@ void join(t_server *server, t_client *client, char **splitted_message)
         send_special(client, my_strdup("error"), my_strdup("You already are in this channel"));
         return;
     }
+    move_client(server, client, target_channel);
     sent_message = generate_message(my_strdup("You enter %s"), 1, client->current_channel->name);
     send_special(client, my_strdup("info"), sent_message);
-    move_client(server, client, target_channel);
 }
 
 void notify(t_server *server, t_client *client, char *action, int check_channel)

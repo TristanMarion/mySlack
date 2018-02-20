@@ -183,6 +183,23 @@ t_channel *add_channel(t_channels_list *channels_list, char *name)
     return (channel);
 }
 
+void remove_channel_from_list(t_server *server, t_channel *channel)
+{
+    t_channels_list *channels_list;
+
+    channels_list = server->serv_config->channels_list;
+    if (channels_list->first_channel == NULL || channel == NULL)
+        return;
+    if (channels_list->first_channel == channel)
+        channels_list->first_channel = channel->next;
+    if (channels_list->last_channel == channel)
+        channels_list->last_channel = channel->prev;
+    if (channel->next != NULL)
+        channel->next->prev = channel->prev;
+    if (channel->prev != NULL)
+        channel->prev->next = channel->next;
+}
+
 void poll_events(t_server *server, t_client *client)
 {
     int read_size;
