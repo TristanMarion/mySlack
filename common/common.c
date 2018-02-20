@@ -112,7 +112,6 @@ char *poll_markdown_triggers(char *str)
         }
         i++;
     }
-
     return str;
 }
 
@@ -150,7 +149,7 @@ void remove_character(char *str, int index)
         str[i] = str[j];
         j++;
     }
-    str[i] = '\0';
+    str[i] = 0;
 }
 
 void apply_markdown(char *str, int begin, int end, t_markdown_entity entity)
@@ -163,7 +162,7 @@ void apply_markdown(char *str, int begin, int end, t_markdown_entity entity)
     i = 0;
     j = 0;
     k = 0;
-    new_message = malloc(sizeof(char) * my_strlen(str) + 8);
+    new_message = malloc(sizeof(char) * my_strlen(str) + 9);
     for (i = 0 ; i < begin ; i++)
         new_message[i] = str[i];
     my_strcat(new_message, entity.escape_sequence);
@@ -171,6 +170,9 @@ void apply_markdown(char *str, int begin, int end, t_markdown_entity entity)
         new_message[j + 4] = str[j];
     my_strcat(new_message, entity.reset_sequence);
     for (k = end - 1 ; k < my_strlen(str) ; k++)
+    {
         new_message[k + 9] = str[k];
+    }
+    new_message[my_strlen(str) + 9] = 0;
     my_strcpy(str, new_message);
 }
