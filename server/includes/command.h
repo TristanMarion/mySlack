@@ -11,8 +11,6 @@ typedef struct s_client_command
 } t_client_command;
 
 void manage_message(t_server *server, t_client *client, char *message);
-void nickname(t_server *server, t_client *client, char **splitted_message);
-void logout(t_server *server, t_client *client, char **splitted_message);
 
 /* Channels */
 void join(t_server *server, t_client *client, char **splitted_message);
@@ -43,5 +41,9 @@ void send_direct_message(char *nickname, int target, char *message);
 void important(t_server *server, t_client *client, char **splitted_message);
 void ping(t_server *server, t_client *client, char **splitted_message);
 void notify(t_server *server, t_client *client, char *action, int check_channel);
+
+/* Miscellaneous */
+void nickname(t_server *server, t_client *client, char **splitted_message);
+void logout(t_server *server, t_client *client, char **splitted_message);
 
 #endif
