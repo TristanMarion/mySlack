@@ -5,5 +5,6 @@
 
 t_server *create_server(char *path);
 int init_server(t_server *server);
+t_clients_list *new_clients_list();
 
 #endif

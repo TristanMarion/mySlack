@@ -10,6 +10,4 @@ typedef struct s_clients_list
 	t_client	*last_client;
 } t_clients_list;
 
-t_clients_list *new_clients_list();
-
 #endif
