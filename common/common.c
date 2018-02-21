@@ -117,6 +117,8 @@ char *poll_markdown_triggers(char *str)
 
 void format_and_apply_markdown(char *str, int begin, int end, t_markdown_entity entity)
 {
+	if (end == my_strlen(str) + 1)
+		return;
     if (str[begin - 1] == entity.symbol && str[end + 1] == entity.symbol)
     {
         remove_character(str, begin - 1);
