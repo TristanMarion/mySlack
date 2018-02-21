@@ -12,14 +12,18 @@
 #include <stdio.h>
 #include <unistd.h>
 
+/* Common includes */
 #include "color.h"
 #include "display.h"
 #include "libmy.h"
 #include "common.h"
 
+/* Structures */
 #include "client.h"
 #include "clients_list.h"
 #include "server.h"
+
+/* Functions */
 #include "sending.h"
 #include "command.h"
 #include "server_command.h"
