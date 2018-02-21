@@ -26,8 +26,9 @@
 /* Functions */
 #include "init_client.h"
 #include "init_server.h"
-#include "server_functions.h"
 #include "sending.h"
+#include "manage_lists.h"
+#include "server_functions.h"
 #include "command.h"
 #include "server_command.h"
 #include "channel.h"

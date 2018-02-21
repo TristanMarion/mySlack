@@ -20,7 +20,9 @@
         "server_command.h": "c",
         "sending.h": "c",
         "stdarg.h": "c",
-        "unistd.h": "c"
+        "unistd.h": "c",
+        "server_functions.h": "c",
+        "init_server.h": "c"
     },
     "c-cpp-flylint.clang.warnings": [
         "all",
