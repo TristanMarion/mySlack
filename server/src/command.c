@@ -181,18 +181,3 @@ void logout(t_server *server, t_client *client, char **splitted_message)
     send_special(client, my_strdup("disconnect"), my_strdup("You have been disconnected, bye !"));
     disconnect(server, client);
 }
-
-void move_client(t_server *server, t_client *client, t_channel *target_channel)
-{
-    if (client->current_channel == target_channel)
-        return;
-    if (client->current_channel != NULL)
-        notify(server, client, my_strdup("left"), 1);
-    else
-        notify(server, client, my_strdup("joined"), 0);
-    client->current_channel = target_channel;
-    if (client->current_channel != NULL)
-        notify(server, client, my_strdup("joined"), 1);
-    else
-        notify(server, client, my_strdup("left"), 0);
-}

@@ -107,3 +107,18 @@ void list_channels(t_server *server, t_client *client, char **splitted_message)
     }
     send_special(client, my_strdup("info"), all_channels);
 }
+
+void move_client(t_server *server, t_client *client, t_channel *target_channel)
+{
+    if (client->current_channel == target_channel)
+        return;
+    if (client->current_channel != NULL)
+        notify(server, client, my_strdup("left"), 1);
+    else
+        notify(server, client, my_strdup("joined"), 0);
+    client->current_channel = target_channel;
+    if (client->current_channel != NULL)
+        notify(server, client, my_strdup("joined"), 1);
+    else
+        notify(server, client, my_strdup("left"), 0);
+}

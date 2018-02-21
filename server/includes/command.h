@@ -19,7 +19,6 @@ void ping(t_server *server, t_client *client, char **splitted_message);
 void nickname(t_server *server, t_client *client, char **splitted_message);
 void important(t_server *server, t_client *client, char **splitted_message);
 void logout(t_server *server, t_client *client, char **splitted_message);
-void move_client(t_server *server, t_client *client, t_channel *target_channel);
 
 /* Channels */
 void join(t_server *server, t_client *client, char **splitted_message);
@@ -27,6 +26,7 @@ void leave(t_server *server, t_client *client, char **splitted_message);
 void create(t_server *server, t_client *client, char **splitted_message);
 int check_channel_availability(t_server *server, char *name);
 void list_channels(t_server *server, t_client *client, char **splitted_message);
+void move_client(t_server *server, t_client *client, t_channel *target_channel);
 
 /* colors */
 void color(t_server *server, t_client *client, char **splitted_message);
