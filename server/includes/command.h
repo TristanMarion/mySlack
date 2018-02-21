@@ -16,7 +16,6 @@ void list_commands(t_server *server, t_client *client, char **splitted_message);
 void direct_message(t_server *server, t_client *client, char **splitted_message);
 void send_direct_message(char *nickname, int target, char *message);
 void help(t_server *server, t_client *client, char **splitted_message);
-void list_channels(t_server *server, t_client *client, char **splitted_message);
 void notify(t_server *server, t_client *client, char *action, int check_channel);
 void ping(t_server *server, t_client *client, char **splitted_message);
 const t_client_command *get_command(char *command);
@@ -37,5 +36,6 @@ void join(t_server *server, t_client *client, char **splitted_message);
 void leave(t_server *server, t_client *client, char **splitted_message);
 void create(t_server *server, t_client *client, char **splitted_message);
 int check_channel_availability(t_server *server, char *name);
+void list_channels(t_server *server, t_client *client, char **splitted_message);
 
 #endif

@@ -139,35 +139,6 @@ void send_direct_message(char *nickname, int target, char *message)
     free(sent_message);
 }
 
-void list_channels(t_server *server, t_client *client, char **splitted_message)
-{
-    t_channel *current_channel;
-    int len;
-    char *all_channels;
-    (void)splitted_message;
-
-    current_channel = server->serv_config->channels_list->first_channel;
-    len = 0;
-    all_channels = my_strdup("List of all server channels :\n");
-    len = my_strlen(all_channels);
-    while (current_channel != NULL)
-    {
-        len += my_strlen(current_channel->name) + 4;
-        all_channels = realloc(all_channels, len);
-        if (my_strcmp(current_channel->name, client->current_channel->name) == 0)
-        {
-            len += 6;
-            all_channels = realloc(all_channels, len);
-            my_strcat(all_channels, "--->");
-        }
-        my_strcat(all_channels, "\t- ");
-        my_strcat(all_channels, current_channel->name);
-        my_strcat(all_channels, "\n");
-        current_channel = current_channel->next;
-    }
-    send_special(client, my_strdup("info"), all_channels);
-}
-
 void notify(t_server *server, t_client *client, char *action, int check_channel)
 {
     char *message;
