@@ -77,3 +77,11 @@ void display_clients(t_server *server)
     }
     my_putstr("\n");
 }
+
+void welcome_message(t_server *server, t_client *client)
+{
+    char *message;
+
+    message = generate_message(server->serv_config->welcome_message, 0, client->nickname);
+    send_special(client, my_strdup("info"), message);
+}

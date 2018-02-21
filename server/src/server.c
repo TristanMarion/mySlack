@@ -69,14 +69,6 @@ void main_loop(t_server *server)
     }
 }
 
-void welcome_message(t_server *server, t_client *client)
-{
-    char *message;
-
-    message = generate_message(server->serv_config->welcome_message, 0, client->nickname);
-    send_special(client, my_strdup("info"), message);
-}
-
 void poll_events(t_server *server, t_client *client)
 {
     int read_size;
