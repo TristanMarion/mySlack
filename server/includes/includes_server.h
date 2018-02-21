@@ -28,6 +28,7 @@
 #include "init_server.h"
 #include "sending.h"
 #include "manage_lists.h"
+#include "config.h"
 #include "server_functions.h"
 #include "command.h"
 #include "server_command.h"
