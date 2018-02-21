@@ -24,6 +24,7 @@
 #include "server.h"
 
 /* Functions */
+#include "init_client.h"
 #include "server_functions.h"
 #include "sending.h"
 #include "command.h"
