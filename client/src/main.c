@@ -2,6 +2,7 @@
 #include <string.h>
 
 int hostname_to_ip(char *hostname, char *ip);
+void read_input(int sock, char *message);
 
 int main(int argc, char **argv)
 {
@@ -48,23 +49,7 @@ int main(int argc, char **argv)
         }
 
         if (FD_ISSET(0, &fds))
-        {
-            read(0, message, MAX_LEN - 1);
-            {
-                char *p = NULL;
-                p = my_strstr(message, "\n");
-                if (p != NULL)
-                {
-                    *p = 0;
-                }
-                else
-                {
-                    message[MAX_LEN - 2] = '\n';
-                    message[MAX_LEN - 1] = 0;
-                }
-            }
-            send_message(sock, message);
-        }
+            read_input(sock, message);
         else if (FD_ISSET(sock, &fds))
         {
             if (recv(sock, server_reply, MAX_LEN - 1, 0) > 0)
@@ -91,4 +76,23 @@ int hostname_to_ip(char *hostname, char *ip)
 
     my_strcpy(ip, inet_ntoa(*(struct in_addr *)he->h_addr));
     return 0;
+}
+
+void read_input(int sock, char *message)
+{
+    read(0, message, MAX_LEN - 1);
+    {
+        char *p = NULL;
+        p = my_strstr(message, "\n");
+        if (p != NULL)
+        {
+            *p = 0;
+        }
+        else
+        {
+            message[MAX_LEN - 2] = '\n';
+            message[MAX_LEN - 1] = 0;
+        }
+    }
+    send_message(sock, message);
 }
