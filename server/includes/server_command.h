@@ -16,6 +16,8 @@ void kick(t_server *server, int *end, char **splitted_message);
 void mute(t_server *server, int *end, char **splitted_message);
 void unmute(t_server *server, int *end, char **splitted_message);
 void create_channel(t_server *server, int *end, char **splitted_message);
+void remove_channel(t_server *server, int *end, char **splitted_message);
+void move_all_clients(t_server *server, t_channel *channel);
 void list_server_commands(t_server *server, int *end, char **splitted_message);
 void stop(t_server *server, int *end, char **splitted_message);
 void server_error(char *error);
