@@ -3,7 +3,6 @@
 
 #include "includes_server.h"
 
-void display_clients(t_server *server);
 void welcome_message(t_server *server, t_client *client);
 void poll_events(t_server *server, t_client *client);
 void main_loop(t_server *server);

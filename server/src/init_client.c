@@ -60,3 +60,20 @@ int check_nickname(t_server *server, t_client *client)
         send_special(client, my_strdup("disconnect"), error_message);
     return (same_nickname_client == NULL);
 }
+
+void display_clients(t_server *server)
+{
+    t_client *tmp;
+
+    my_putstr_color("blue", "", "\nNumber of connected users : ", 0, 0, 1);
+    my_put_nbr(server->clients_list->nb_clients);
+    my_putstr_color("cyan", "", "\n\nList of connected users :", 0, 0, 1);
+    tmp = server->clients_list->first_client;
+    while (tmp != NULL)
+    {
+        my_putstr("\n\t - ");
+        my_putstr(tmp->nickname);
+        tmp = tmp->next;
+    }
+    my_putstr("\n");
+}

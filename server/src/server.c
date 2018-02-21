@@ -1,30 +1,5 @@
 #include "includes_server.h"
 
-void display_clients(t_server *server)
-{
-    t_client *tmp;
-
-    my_putstr_color("blue", "", "\nNumber of connected users : ", 0, 0, 1);
-    my_put_nbr(server->clients_list->nb_clients);
-    my_putstr_color("cyan", "", "\n\nList of connected users :", 0, 0, 1);
-    tmp = server->clients_list->first_client;
-    while (tmp != NULL)
-    {
-        my_putstr("\n\t - ");
-        my_putstr(tmp->nickname);
-        tmp = tmp->next;
-    }
-    my_putstr("\n");
-}
-
-void welcome_message(t_server *server, t_client *client)
-{
-    char *message;
-
-    message = generate_message(server->serv_config->welcome_message, 0, client->nickname);
-    send_special(client, my_strdup("info"), message);
-}
-
 void main_loop(t_server *server)
 {
     t_client *current_client;
@@ -92,6 +67,14 @@ void main_loop(t_server *server)
             current_client = current_client->next;
         }
     }
+}
+
+void welcome_message(t_server *server, t_client *client)
+{
+    char *message;
+
+    message = generate_message(server->serv_config->welcome_message, 0, client->nickname);
+    send_special(client, my_strdup("info"), message);
 }
 
 void poll_events(t_server *server, t_client *client)
