@@ -31,3 +31,18 @@ t_client *get_client(t_server *server, char *name)
     }
     return (NULL);
 }
+
+t_color get_color(char *color)
+{
+    int i;
+    t_color current_color;
+
+    i = 0;
+    while ((current_color = g_color[i]).color != NULL)
+    {
+        if (my_strcmp(current_color.color, color) == 0)
+            return current_color;
+        i++;
+    }
+    return g_color[i];
+}

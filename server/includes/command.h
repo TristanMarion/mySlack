@@ -28,7 +28,6 @@ void nickname(t_server *server, t_client *client, char **splitted_message);
 void important(t_server *server, t_client *client, char **splitted_message);
 void color(t_server *server, t_client *client, char **splitted_message);
 void bg_color(t_server *server, t_client *client, char **splitted_message);
-t_color get_color(char *color);
 void change_color(t_client *client, char *mode, char *message);
 void list_colors(t_server *server, t_client *client, char **splitted_message);
 void reset_colors(t_server *server, t_client *client, char *mode);
