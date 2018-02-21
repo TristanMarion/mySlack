@@ -1,9 +1,11 @@
 #ifndef __INCLUDES_SERVER_H__
 #define __INCLUDES_SERVER_H__
 
+/* Constants */
 #define MAX_LEN 1024
 #define NICKNAME_MAX_LEN 128
 
+/* Libs */
 #include <stdlib.h>
 #include <netinet/in.h>
 #include <sys/select.h>
