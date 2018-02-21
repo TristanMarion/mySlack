@@ -12,7 +12,7 @@ CC		= gcc
 NAME		= server
 BUILD_PATH	= obj
 SRC		= src/server.c src/main.c src/clients_list.c  src/command.c src/server_command.c src/channel.c src/sending.c \
-			src/init_client.c \
+			src/init_client.c src/init_server.c \
 			../common/libmy.c ../common/color.c ../common/display.c  ../common/common.c
 OBJ		= $(SRC:%.c=%.o)
 INCLUDES	= -I ../includes -I ./includes

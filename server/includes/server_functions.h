@@ -3,8 +3,6 @@
 
 #include "includes_server.h"
 
-t_server *create_server(char *path);
-int init_server(t_server *server);
 void add_client_to_list(t_server *server, t_client *client);
 void display_clients(t_server *server);
 void welcome_message(t_server *server, t_client *client);
