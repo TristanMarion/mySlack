@@ -11,8 +11,8 @@
 CC		= gcc
 NAME		= server
 BUILD_PATH	= obj
-SRC		= src/server.c src/main.c src/server_command.c src/sending.c \
-			src/init_client.c src/init_server.c src/manage_lists.c src/config.c  src/getters.c \
+SRC		= src/server.c src/main.c src/server_command.c src/init_client.c src/init_server.c \
+			src/manage_lists.c src/config.c  src/utils.c \
 			src/commands/commands_channel.c src/commands/commands_color.c src/commands/commands_command.c \
 			src/commands/commands_message.c src/commands/commands_miscellaneous.c \
 			../common/libmy.c ../common/color.c ../common/display.c  ../common/common.c
