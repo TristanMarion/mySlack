@@ -16,33 +16,6 @@ void manage_message(t_server *server, t_client *client, char *message)
     send_special(client, my_strdup("error"), response);
 }
 
-void notify(t_server *server, t_client *client, char *action, int check_channel)
-{
-    char *message;
-    t_client *current_client;
-    char *place;
-    char *server_message;
-
-    place = my_strdup(check_channel == 1 ? "channel" : "server");
-    message = generate_message(my_strdup("info\037%s %s the %s !"), 1, client->nickname, action, place);
-    current_client = server->clients_list->first_client;
-    while (current_client != NULL)
-    {
-        if (current_client->fd_id != client->fd_id)
-            if (check_channel == 0 || my_strcmp(current_client->current_channel->name, client->current_channel->name) == 0)
-                send(current_client->fd_id, message, my_strlen(message), 0);
-        current_client = current_client->next;
-    }
-    if (client->current_channel != NULL)
-        server_message = generate_message(my_strdup("%s %s the %s %s !"), 1, client->nickname, action, place, client->current_channel->name);
-    else
-        server_message = generate_message(my_strdup("%s %s the %s !"), 1, client->nickname, action, place);
-    server_info(server_message);
-    free(message);
-    free(action);
-    free(place);
-}
-
 void nickname(t_server *server, t_client *client, char **splitted_message)
 {
     char *sent_message;
