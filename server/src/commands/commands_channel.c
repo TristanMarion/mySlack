@@ -144,7 +144,7 @@ void notify(t_server *server, t_client *client, char *action, int check_channel)
         server_message = generate_message(my_strdup("%s %s the %s %s !"), 1, client->nickname, action, place, client->current_channel->name);
     else
         server_message = generate_message(my_strdup("%s %s the %s !"), 1, client->nickname, action, place);
-    server_info(server_message);
+    server_info(server, server_message);
     free(message);
     free(action);
     free(place);

@@ -14,6 +14,7 @@ t_config *get_config(char *path)
     config->welcome_message = my_strdup("Bienvenue !");
     config->default_color = my_strdup("white");
     config->default_bg_color = my_strdup("");
+    config->log_file_path = my_strdup("logs.txt");
     if ((file = fopen(path, "r")))
     {
         while (fgets(buffer, 255, file) != NULL)
@@ -41,6 +42,11 @@ t_config *get_config(char *path)
                 {
                     free(config->default_bg_color);
                     config->default_bg_color = my_strdup(format_field(tab[1]));
+                }
+                if (my_strcmp("logs", tab[0]) == 0)
+                {
+                    free(config->log_file_path);
+                    config->log_file_path = my_strdup(format_field(tab[1]));
                 }
             }
         }

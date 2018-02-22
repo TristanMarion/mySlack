@@ -33,6 +33,6 @@ void list_server_commands(t_server *server, int *end, char **splitted_message);
 void stop(t_server *server, int *end, char **splitted_message);
 
 void server_error(char *error);
-void server_info(char *info);
+void server_info(t_server *server, char *info);
 
 #endif

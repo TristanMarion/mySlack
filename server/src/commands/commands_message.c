@@ -18,7 +18,7 @@ void send_message(t_server *server, t_client *client, char **splitted_message)
             send(current_client->fd_id, message, my_strlen(message), 0);
         current_client = current_client->next;
     }
-    server_info(generate_message(my_strdup("[%s] %s : %s"), 1, client->current_channel->name, client->nickname, splitted_message[1]));
+    server_info(server, generate_message(my_strdup("[%s] %s : %s"), 1, client->current_channel->name, client->nickname, splitted_message[1]));
     free(message);
 }
 
@@ -41,7 +41,7 @@ void direct_message(t_server *server, t_client *client, char **splitted_message)
     if ((target_client = get_client(server, splitted_core_message[0])) != NULL)
     {
         send_direct_message(client->nickname, target_client->fd_id, my_implode(splitted_core_message, " ", 1));
-        server_info(generate_message(my_strdup("%s sent a private message to %s"), 1, client->nickname, target_client->nickname));
+        server_info(server, generate_message(my_strdup("%s sent a private message to %s"), 1, client->nickname, target_client->nickname));
     }
     else
         send_special(client, my_strdup("error"), my_strdup("User not found"));
@@ -82,7 +82,7 @@ void ping(t_server *server, t_client *client, char **splitted_message)
         sent_message = malloc(needed);
         snprintf(sent_message, needed, "%s pinged you !", client->nickname);
         send_special(target, my_strdup("info"), sent_message);
-        server_info(generate_message(my_strdup("%s pinged %s"), 1, client->nickname, target->nickname));
+        server_info(server, generate_message(my_strdup("%s pinged %s"), 1, client->nickname, target->nickname));
         return;
     }
     sent_message = my_strdup("Your ping didn't find its target and is now lost in space and time :(");
@@ -114,7 +114,7 @@ void wizz(t_server *server, t_client *client, char **splitted_message)
         sent_message = malloc(needed); 
         snprintf(sent_message, needed, "\07%s wizzed you !", client->nickname); 
         send_special(target, my_strdup("info"), sent_message); 
-        server_info(generate_message(my_strdup("%s wizzed %s"), 1, client->nickname, target->nickname));
+        server_info(server, generate_message(my_strdup("%s wizzed %s"), 1, client->nickname, target->nickname));
         return; 
     } 
     sent_message = my_strdup("Your wizz didn't find its target and will now randomly annoy people :("); 
@@ -144,6 +144,6 @@ void important(t_server *server, t_client *client, char **splitted_message)
             send(current_client->fd_id, message, my_strlen(message), 0);
         current_client = current_client->next;
     }
-    server_info(generate_message(my_strdup("[IMPORTANT] %s : %s"), 1, client->nickname, splitted_message[1]));
+    server_info(server, generate_message(my_strdup("[IMPORTANT] %s : %s"), 1, client->nickname, splitted_message[1]));
     free(message);
 }

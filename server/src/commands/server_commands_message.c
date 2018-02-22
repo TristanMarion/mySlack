@@ -15,5 +15,6 @@ void server_send_message(t_server *server, int *end, char **splitted_message)
         send(current_client->fd_id, sent_message, my_strlen(sent_message), 0);
         current_client = current_client->next;
     }
+    write_to_log_file(server, splitted_message[1]);
     free(sent_message);
 }
