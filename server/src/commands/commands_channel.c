@@ -61,6 +61,7 @@ void create(t_server *server, t_client *client, char **splitted_message)
     }
     target_channel = add_channel(server->serv_config->channels_list, my_strdup(splitted_core_message[0]));
     sent_message = generate_message(my_strdup("You create and join %s"), 1, splitted_core_message[0]);
+    server_info(server, generate_message(my_strdup("%s created the channel %s"), 1, client->nickname, splitted_core_message[0]));
     send_special(client, my_strdup("info"), sent_message);
     move_client(server, client, target_channel);
 }
