@@ -14,9 +14,11 @@ The server broadcasts any message sent by a user to all connected clients on thi
 - Handles multiple connections
 - Accessible from anywhere
 - Maximum connected client number
-- Server configuration file : port, maximum clients number, default channels list
+- Server configuration file : port, maximum clients number, default channels list, log file
 - Connection / Disconnection notification to all users
 - Channel message broadcasting
+
+All events are displayed server side and stored in a log file (specified in the config file)
 
 ## CLIENT
 
