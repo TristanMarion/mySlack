@@ -16,6 +16,4 @@ typedef struct s_channels_list
 	t_channel	*last_channel;
 } t_channels_list;
 
-t_channels_list *new_channels_list();
-
 #endif
