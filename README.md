@@ -60,6 +60,7 @@ Client commands :
 - `/list_colors` lists all available colors for the messages and messages' background
 - `/reset_color` resets the user messages' color
 - `/reset_bg_color` resets the user messages' background color
+- `/list_users` lists all connected users
 - `/logout` disconnects the user
 
 Server commands :
