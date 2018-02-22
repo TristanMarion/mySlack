@@ -33,6 +33,7 @@ void reset_color(t_server *server, t_client *client, char **splitted_message);
 void help(t_server *server, t_client *client, char **splitted_message);
 void list_commands(t_server *server, t_client *client, char **splitted_message);
 const t_client_command *get_command(char *command);
+void list_users(t_server *server, t_client *client, char **splitted_message);
 
 /* Messages */
 void send_message(t_server *server, t_client *client, char **splitted_message);
