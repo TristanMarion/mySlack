@@ -39,7 +39,9 @@ It is possible to list all server channels thanks to the command `/list_channels
 
 ## COMMANDS
 
-There are multiple commands implemented on our chat system :
+There are multiple commands implemented on our chat system, server and client side.
+
+Client commands :
 - `/send_message <message>` sends a message to the channel (is the same than not using any command)
 - `/list_commands` displays the list of available commands on the server
 - `/commands_list` is an alias of `/list_commands`
@@ -49,7 +51,27 @@ There are multiple commands implemented on our chat system :
 - `/join <channel>` joins an existing channel
 - `/create <channel>` creates a new channel
 - `/leave` moves the user to the default server channel
-- `/ping` answers the message `Pong` to the sender
+- `/ping` answers the message `Pong` to the sender or ping a user
+- `/wizz <nickname>` Wizz (annoy) a user
+- `/nickname <nickname>` changes the nickname of the user
+- `/important <message>` sends an important message to all the connected users (no matter what their channel is)
+- `/color <color>` changes the user messages' color 
+- `/bg_color <color>` changes the user messages' background color
+- `/list_colors` lists all available colors for the messages and messages' background
+- `/reset_color` resets the user messages' color
+- `/reset_bg_color` resets the user messages' background color
+- `/list_users` lists all connected users
+- `/logout` disconnects the user
+
+Server commands :
+- `/send_message <message>` sends a message to all connected users
+- `/kick <nickname> [reason]` disconnects a user from the server
+- `/create_channel <channel>` creates a channel
+- `/remove_channel <channel>` removes a channel (and move all its users to default channel)
+- `/mute <nickname>` mutes a user (he can't send messages anymore)
+- `/unmute <nickname>` unmutes a user
+- `/list_commands` lists all available commands
+- `/stop` stops the server
 
 If a wrong command is sent, the server answers a help message to the user.
 
