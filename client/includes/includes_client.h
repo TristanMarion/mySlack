@@ -16,6 +16,6 @@
 #include "client.h"
 #include "message.h"
 
-#define MAX_LEN 1024
+#define MAX_LEN 2048
 
 #endif

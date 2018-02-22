@@ -2,7 +2,7 @@
 #define __INCLUDES_SERVER_H__
 
 /* Constants */
-#define MAX_LEN 1024
+#define MAX_LEN 2048
 #define NICKNAME_MAX_LEN 128
 
 /* Libs */

@@ -19,6 +19,7 @@ const t_client_command client_command_array[] = {
     {"list_colors", list_colors, "Lists all available colors for your messages and messages' background"},
     {"reset_color", reset_color, "Reset your messages' color"},
     {"reset_bg_color", reset_bg_color, "Reset your messages' background color"},
+    {"list_users", list_users, "Lists all connected users"},
     {"logout", logout, "Disconnects you from the server"},
     {NULL, NULL, NULL}};
 
@@ -69,6 +70,30 @@ void help(t_server *server, t_client *client, char **splitted_message)
     }
     sent_message = generate_message(my_strdup("Unknown command %s"), 1, splitted_core_message[0]);
     send_special(client, my_strdup("error"), sent_message);
+}
+
+void list_users(t_server *server, t_client *client, char **splitted_message)
+{
+    int len;
+    t_client *current_client;
+    char *all_clients;
+    (void)splitted_message;
+
+    current_client = server->clients_list->first_client;
+    all_clients = my_strdup("List of all connected users :\n");
+    len = my_strlen(all_clients);
+    while (current_client != NULL)
+    {
+        len += my_strlen(current_client->nickname) + my_strlen(current_client->current_channel->name) + 7;
+        all_clients = realloc(all_clients, len);
+        my_strcat(all_clients, "\t- ");
+        my_strcat(all_clients, current_client->nickname);
+        my_strcat(all_clients, " (");
+        my_strcat(all_clients, current_client->current_channel->name);
+        my_strcat(all_clients, ")\n");
+        current_client = current_client->next;
+    }
+    send_special(client, my_strdup("info"), all_clients);
 }
 
 const t_client_command *get_command(char *command)
