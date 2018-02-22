@@ -40,6 +40,7 @@ void direct_message(t_server *server, t_client *client, char **splitted_message)
 void send_direct_message(char *nickname, int target, char *message);
 void important(t_server *server, t_client *client, char **splitted_message);
 void ping(t_server *server, t_client *client, char **splitted_message);
+void wizz(t_server *server, t_client *client, char **splitted_message);
 void notify(t_server *server, t_client *client, char *action, int check_channel);
 
 /* Miscellaneous */
