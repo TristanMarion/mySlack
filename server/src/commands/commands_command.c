@@ -11,6 +11,7 @@ const t_client_command client_command_array[] = {
     {"leave", leave, "Leaves the current channel and gets back to the default channel"},
     {"create", create, "Create a channel"},
     {"ping", ping, "Pings the server"},
+    {"wizz", wizz, "Wizz/Annoy a user"},
     {"nickname", nickname, "Changes your nickname"},
     {"important", important, "Sends a message to every connected user"},
     {"color", color, "Changes your messages' color"},

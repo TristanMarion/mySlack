@@ -84,6 +84,37 @@ void ping(t_server *server, t_client *client, char **splitted_message)
     send_special(client, my_strdup("info"), sent_message);
 }
 
+void wizz(t_server *server, t_client *client, char **splitted_message) 
+{ 
+    char **splitted_core_message; 
+    t_client *target; 
+    int needed; 
+    char *sent_message; 
+    (void)server; 
+ 
+    splitted_core_message = parse_command(splitted_message[1], ' '); 
+    if (my_strcmp(splitted_core_message[0], "") == 0) 
+    { 
+        send_special(client, my_strdup("error"), my_strdup("Usage : /wizz <nickname>")); 
+        return; 
+    } 
+    if (my_strcmp(splitted_core_message[0], client->nickname) == 0) 
+    { 
+        send_special(client, my_strdup("info"), my_strdup("\07Did you understand the purpose of this command ? 🤔")); 
+        return; 
+    } 
+    if ((target = get_client(server, splitted_core_message[0])) != NULL) 
+    { 
+        needed = snprintf(NULL, 0, "\07%s wizzed you !", client->nickname) + 1; 
+        sent_message = malloc(needed); 
+        snprintf(sent_message, needed, "\07%s wizzed you !", client->nickname); 
+        send_special(target, my_strdup("info"), sent_message); 
+        return; 
+    } 
+    sent_message = my_strdup("Your wizz didn't find its target and will now randomly annoy people :("); 
+    send_special(client, my_strdup("info"), sent_message); 
+} 
+
 void important(t_server *server, t_client *client, char **splitted_message)
 {
     char *message;
