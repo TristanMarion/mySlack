@@ -17,7 +17,7 @@ void create_channel(t_server *server, int *end, char **splitted_message)
         return;
     }
     add_channel(server->serv_config->channels_list, my_strdup(splitted_core_message[0]));
-    server_info(generate_message(my_strdup("Channel %s created"), 1, splitted_core_message[0]));
+    server_info(server, generate_message(my_strdup("Channel %s created"), 1, splitted_core_message[0]));
 }
 
 void remove_channel(t_server *server, int *end, char **splitted_message)
@@ -44,7 +44,7 @@ void remove_channel(t_server *server, int *end, char **splitted_message)
     }
     move_all_clients(server, removed_channel);
     remove_channel_from_list(server, removed_channel);
-    server_info(generate_message(my_strdup("Channel %s removed"), 1, splitted_core_message[0]));
+    server_info(server, generate_message(my_strdup("Channel %s removed"), 1, splitted_core_message[0]));
 }
 
 void move_all_clients(t_server *server, t_channel *channel)
@@ -60,7 +60,7 @@ void move_all_clients(t_server *server, t_channel *channel)
         {
             send_special(current_client, my_strdup("info"), my_strdup(sent_message));
             move_client(server, current_client, server->serv_config->channels_list->first_channel);
-            server_info(generate_message(my_strdup("%s has been moved to default channel"), 1, current_client->nickname));
+            server_info(server, generate_message(my_strdup("%s has been moved to default channel"), 1, current_client->nickname));
         }
         current_client = current_client->next;
     }

@@ -57,3 +57,18 @@ void send_special(t_client *client, char *special, char *message)
     free(message);
     free(sent_message);
 }
+
+void write_to_log_file(t_server *server, char *message)
+{
+    int fd;
+
+    if (my_strcmp(server->serv_config->log_file_path, "None") == 0)
+        return;
+    fd = open(server->serv_config->log_file_path, O_APPEND | O_RDWR| O_CREAT, 0666);
+    if (fd != -1)
+    {
+        write(fd, message, my_strlen(message));
+        write(fd, "\n", 1);
+        close(fd);
+    }
+}

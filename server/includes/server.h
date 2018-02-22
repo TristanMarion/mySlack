@@ -12,6 +12,7 @@ typedef struct s_config
 	char 				*welcome_message;
     char                *default_color;
     char                *default_bg_color;
+    char                *log_file_path;
 } t_config;
 
 typedef struct s_server

@@ -16,6 +16,7 @@ void nickname(t_server *server, t_client *client, char **splitted_message)
         send_special(client, my_strdup("error"), my_strdup("This nickname is already taken"));
         return;
     }
+    server_info(server, generate_message(my_strdup("%s changed its nickname to %s"), 1, client->nickname, splitted_core_message[0]));
     my_strcpy(client->nickname, splitted_core_message[0]);
     sent_message = generate_message(my_strdup("You changed your nickname to %s"), 1, client->nickname);
     send_special(client, my_strdup("info"), sent_message);

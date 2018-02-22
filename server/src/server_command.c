@@ -66,7 +66,7 @@ void stop(t_server *server, int *end, char **splitted_message)
         remove_client_from_list(server, current_client);
         current_client = current_client->next;
     }
-    server_info(my_strdup("The server will now stop"));
+    server_info(server, my_strdup("The server will now stop"));
     *end = 1;
 }
 
@@ -91,8 +91,9 @@ void server_error(char *error)
     free(error);
 }
 
-void server_info(char *info)
+void server_info(t_server *server, char *info)
 {
     put_info(info);
+    write_to_log_file(server, info);
     free(info);
 }

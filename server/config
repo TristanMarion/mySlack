@@ -4,3 +4,4 @@ welcome:Bienvenue à toi %s !
 color:white
 bg_color:black
 channels:General,Random
+logs:logs.txt
