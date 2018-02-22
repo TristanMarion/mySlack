@@ -33,6 +33,7 @@ void remove_client_from_list(t_server *server, t_client *client)
         client->next->prev = client->prev;
     if (client->prev != NULL)
         client->prev->next = client->next;
+    close(client->fd_id);
     clients_list->nb_clients--;
 }
 
